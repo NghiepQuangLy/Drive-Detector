@@ -21,7 +21,7 @@ def main():
 
     # Call the Drive v3 API
     results = service.files().list(
-        pageSize=10, fields="nextPageToken, files(id, name, capabilities)").execute()
+        pageSize=10, fields="nextPageToken, files(id, name, capabilities, lastModifyingUser)").execute()
     items = results.get('files', [])
 
     if not items:
@@ -29,16 +29,27 @@ def main():
     else:
         print('Files:')
         for item in items:
-            print("Name: ", item['name'], "\nID: ", item['id'])
+            print("Name: ", item['name'], "\nID: ", item['id'], "\nLast Modifying User: ", end="")
+            try:
+                print(item['lastModifyingUser']['displayName'], " - ", item['lastModifyingUser']['emailAddress'])
+            except KeyError:
+                print("Can not get last modifying user information")
             print("------------------------------------------")
             if item['capabilities']['canReadRevisions'] is True:
-                revisions_json = service.revisions().list(fileId=item['id']).execute()
+                revisions_json = service.revisions().list(fileId=item['id'], fields="revisions(id, modifiedTime, lastModifyingUser)").execute()
                 revisions_str = json.dumps(revisions_json['revisions'])
-                #print(revisions_json)
                 revisions_dict = json.loads(revisions_str)
-                print("Revision ID - Modified time")
+                print('{:12} {:27} {:29} {:20}'.format("Revision ID", "Modified time", "Last Modifying User", "Email"))
                 for revision in revisions_dict:
-                    print('{0} - {1}'.format(revision.get('id'), revision.get('modifiedTime')))
+                    print('{:12} {:27} '.format(revision.get('id'), revision.get('modifiedTime')), end="")
+                    try:
+                        print('{:30}'.format(revision.get('lastModifyingUser').get('displayName')), end="")
+                        if revision.get('lastModifyingUser').get('emailAddress') is not None:
+                            print('{:20}'.format(revision.get('lastModifyingUser').get('emailAddress')))
+                        else:
+                            print()
+                    except Exception:
+                        print()
                     #print("Last modified user: ", revision.get('lastModifyingUser').get('displayName'), revision.get('lastModifyingUser').get('emailAddress'), "\n")
             else:
                 print("Can not read revision - NO PERMISSION")
