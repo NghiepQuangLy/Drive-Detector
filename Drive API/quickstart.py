@@ -32,8 +32,7 @@ def main():
             print('*********************************\n', drive['name'])
             results_file = service.files().list(pageSize=20, includeTeamDriveItems=True, corpora='teamDrive',
                                                 supportsTeamDrives=True, teamDriveId=drive['id'],
-                                                fields="nextPageToken, files(id, name, capabilities, "
-                                                       "lastModifyingUser)").execute()
+                                                fields="nextPageToken, files(id, name, capabilities, lastModifyingUser)").execute()
             files = results_file.get('files', [])
 
             if not files:
@@ -41,8 +40,7 @@ def main():
             else:
                 print('\tF I L E S:')
                 for a_file in files:
-                    print('\t', '{:21}'.format('Name:'), a_file['name'], '\n\t', '{:21}'.format('ID:'), a_file['id'],
-                          '\n\t', '{:22}'.format('Last Modifying User:'), end="")
+                    print('\t', '{:21}'.format('Name:'), a_file['name'], '\n\t', '{:21}'.format('ID:'), a_file['id'], '\n\t', '{:22}'.format('Last Modifying User:'), end="")
                     try:
                         print(a_file['lastModifyingUser']['displayName'])
                     except KeyError:
@@ -51,13 +49,12 @@ def main():
                     if a_file['capabilities']['canReadRevisions'] is True:
 
                         revisions_json = service.revisions().list(fileId=a_file['id'],
-                                                                  fields="revisions(id, modifiedTime, "
-                                                                         "lastModifyingUser)").execute()
+                                                                  fields="revisions(id, modifiedTime, lastModifyingUser)").execute()
                         revisions_str = json.dumps(revisions_json['revisions'])
                         revisions_dict = json.loads(revisions_str)
 
-                        print('\t', '{:12} {:27} {:29} {:20}'.format("Revision ID", "Modified time",
-                                                                     "Last Modifying User", "Email"))
+                        print('\t', '{:12} {:27} {:29} {:20}'.format("Revision ID", "Modified time", "Last Modifying User",
+                                                               "Email"))
                         for revision in revisions_dict:
                             print('\t', '{:12} {:27} '.format(revision.get('id'), revision.get('modifiedTime')), end="")
                             try:
@@ -78,8 +75,7 @@ def main():
 
                     while page_token:
                         results_change = service.changes().list(pageToken=page_token, includeTeamDriveItems=True,
-                                                                supportsTeamDrives=True, 
-                                                                teamDriveId=drive['id']).execute()
+                                                                supportsTeamDrives=True, teamDriveId=drive['id']).execute()
                         page_token = results_change.get('nextPageToken')
                         print(results_change)
                     """
@@ -89,22 +85,13 @@ def main():
     # Call the Drive v3 API
     results = service.files().list(
         pageSize=10, fields="nextPageToken, files(id, name, capabilities, lastModifyingUser)").execute()
-    items = results.get('files', [])
-
-    if not items:
-        print('No files found.')
-    else:
-        print('Files:')
-        for item in items:
-            print("Name: ", item['name'], "\nID: ", item['id'], "\nLast Modifying User: ", end="")
             try:
                 print(item['lastModifyingUser']['displayName'], " - ", item['lastModifyingUser']['emailAddress'])
             except KeyError:
                 print("Can not get last modifying user information")
             print("------------------------------------------")
             if item['capabilities']['canReadRevisions'] is True:
-                revisions_json = service.revisions().list(fileId=item['id'], fields="revisions(id, modifiedTime, 
-                lastModifyingUser)").execute()
+                revisions_json = service.revisions().list(fileId=item['id'], fields="revisions(id, modifiedTime, lastModifyingUser)").execute()
                 revisions_str = json.dumps(revisions_json['revisions'])
                 revisions_dict = json.loads(revisions_str)
                 print('{:12} {:27} {:29} {:20}'.format("Revision ID", "Modified time", "Last Modifying User", "Email"))
@@ -118,11 +105,11 @@ def main():
                             print()
                     except Exception:
                         print()
-                    #print("Last modified user: ", revision.get('lastModifyingUser').get('displayName'), 
-                    revision.get('lastModifyingUser').get('emailAddress'), "\n")
+                    #print("Last modified user: ", revision.get('lastModifyingUser').get('displayName'), revision.get('lastModifyingUser').get('emailAddress'), "\n")
             else:
                 print("Can not read revision - NO PERMISSION")
             print()
+
 """
 if __name__ == '__main__':
     main()
