@@ -29,5 +29,8 @@ def main():
         for item in items:
             print('{0} ({1})'.format(item['name'], item['id']))
 
+            # Accessing revisions
+            revisions_results = service.revisions().list(fileId=item['id'], fields="revisions(id, name)").execute()
+
 if __name__ == '__main__':
     main()
