@@ -20,9 +20,7 @@ def main():
     service = build('drive', 'v3', http=creds.authorize(Http()))
 
     # get all team drives of user
-    # Allows the user to decide how many drives the user wants to review
-    #number_of_drives = int(input("Enter the number of drives for which you want to see the data: "))
-    results_drive = service.teamdrives().list(pageSize=1).execute()
+    results_drive = service.teamdrives().list(pageSize=10).execute()
     team_drives = json.loads(json.dumps(results_drive['teamDrives']))
 
     print('D R I V E S:')
@@ -31,7 +29,6 @@ def main():
     else:
         # goes through all the drive on the user's account
         for drive in team_drives:
-            #drive["name"] = input("Enter the name of the drive folder: ")
             print('*********************************\n', drive['name'])
             results_file = service.files().list(pageSize=20, includeTeamDriveItems=True, corpora='teamDrive',
                                                 supportsTeamDrives=True, teamDriveId=drive['id'],
