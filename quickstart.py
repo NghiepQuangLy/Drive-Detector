@@ -142,35 +142,52 @@ def main():
     # get all team drives of user
     team_drives = get_team_drives(service)
 
-    print('D R I V E S:')
+    # prompts the user for a team drive name
+    user_input_team_drive = input("Please enter the name of a team drive: ")
+
+    # if the user has no team drives
     if not team_drives:
         print('No drives found')
+        return
     else:
-        # goes through all the drive on the user's account
+
+        # traverse all the team drives the user has until the one specified by the user is found
+        found = False
         for drive in team_drives:
-            print('*********************************\n', drive['name'])
-            files = get_files(service, drive)
+            if drive['name'] == user_input_team_drive:
+                found = True
+                break
 
-            if not files:
-                print('\t: No files found')
-            else:
-                print('\tF I L E S:')
-                for a_file in files:
-                    print_file_all_info(service, a_file)
+        # if the team drive by the specified by the user does not exist
+        if not found:
+            print("No such drive")
+            return
 
-                    """
-                    results_token = service.changes().getStartPageToken(supportsTeamDrives=True,
-                                                                        teamDriveId=drive['id']).execute()
-                    page_token = results_token.get('startPageToken')
+    print('D R I V E:', drive['name'])
 
-                    while page_token:
-                        results_change = service.changes().list(pageToken=page_token, includeTeamDriveItems=True,
-                                                                supportsTeamDrives=True, teamDriveId=drive['id']).execute()
-                        page_token = results_change.get('nextPageToken')
-                        print(results_change)
-                    """
+    print('*********************************')
+    files = get_files(service, drive)
 
-            print('*********************************')
+    if not files:
+        print('No files found')
+    else:
+        print('F I L E S:')
+        for a_file in files:
+            print_file_all_info(service, a_file)
+
+            """
+            results_token = service.changes().getStartPageToken(supportsTeamDrives=True,
+                                                                teamDriveId=drive['id']).execute()
+            page_token = results_token.get('startPageToken')
+
+            while page_token:
+                results_change = service.changes().list(pageToken=page_token, includeTeamDriveItems=True,
+                                                        supportsTeamDrives=True, teamDriveId=drive['id']).execute()
+                page_token = results_change.get('nextPageToken')
+                print(results_change)
+            """
+
+    print('*********************************')
 
 
 if __name__ == '__main__':
