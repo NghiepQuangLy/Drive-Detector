@@ -175,20 +175,8 @@ def main():
         for a_file in files:
             print_file_all_info(service, a_file)
 
-            """
-            results_token = service.changes().getStartPageToken(supportsTeamDrives=True,
-                                                                teamDriveId=drive['id']).execute()
-            page_token = results_token.get('startPageToken')
-
-            while page_token:
-                results_change = service.changes().list(pageToken=page_token, includeTeamDriveItems=True,
-                                                        supportsTeamDrives=True, teamDriveId=drive['id']).execute()
-                page_token = results_change.get('nextPageToken')
-                print(results_change)
-            """
-
     print('*********************************')
-
+    return drive['id']
 
 if __name__ == '__main__':
     main()
