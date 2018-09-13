@@ -118,4 +118,3 @@ def print_file_all_info(api_build, file):
     print_file_basic_info(file)
     print("\t------------------------------------------")
     print_file_revisions(api_build, file)
-

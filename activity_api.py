@@ -27,5 +27,3 @@ def print_changes(changes):
             time = datetime.datetime.fromtimestamp(
                 int(event['eventTimeMillis'])/1000)
             print('\t', time, '    {:25} {:10}'.format(user['name'], event['primaryEventType']))
-
-    print()
