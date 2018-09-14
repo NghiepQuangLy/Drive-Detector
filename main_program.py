@@ -12,16 +12,14 @@ def main():
     # Prints all the files in a team drive as well as their revisions
     # Prints all activities in a team drive
 
-    apis = {'rest':     google_api.API('token_REST.json',     SCOPES_REST,     'drive',        'v3', 'rest'),
-            'activity': google_api.API('token_ACTIVITY.json', SCOPES_ACTIVITY, 'appsactivity', 'v1', 'activity')}
+    apis = {'rest':     rest_api.REST_API('token_REST.json',     SCOPES_REST,     'drive',        'v3', 'rest'),
+            'activity': activity_api.ACTIVITY_API('token_ACTIVITY.json', SCOPES_ACTIVITY, 'appsactivity', 'v1', 'activity')}
 
     for api in apis:
         apis[api].get_service()
 
-    drive_id = None
-
     # get all team drives of user
-    team_drives = rest_api.get_team_drives(apis['rest'].service)
+    team_drives = apis['rest'].get_team_drives()
 
     # if the user has no team drives
     if not team_drives:
@@ -48,17 +46,17 @@ def main():
 
     print('*********************************')
 
-    files = rest_api.get_files(apis['rest'].service, drive)
+    files = apis['rest'].get_files(drive)
 
     if not files:
         print('No files found')
     else:
         print('F I L E S:')
         for a_file in files:
-            rest_api.print_file_all_info(apis['rest'].service, a_file)
+            apis['rest'].print_file_all_info(a_file)
 
-            file_changes = activity_api.get_changes(apis['activity'].service, a_file['id'])
-            activity_api.print_changes(file_changes)
+            file_changes = apis['activity'].get_changes(a_file['id'])
+            apis['activity'].print_changes(file_changes)
 
             print()
 
