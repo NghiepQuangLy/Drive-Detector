@@ -8,9 +8,6 @@ class ACTIVITY_API(google_api.API):
         Prints information about the last 10 events that occurred the user's Drive.
         """
 
-        if self.service is None:
-            self.get_service()
-
         # Call the Drive Activity API
         results = self.service.activities().list(source='drive.google.com', drive_fileId=file_id, pageSize=20).execute()
         activities = results.get('activities', [])

@@ -10,9 +10,6 @@ class REST_API(google_api.API):
         :return: a dictionary containing the team drives
         """
 
-        if self.service is None:
-            self.get_service()
-
         # get the team drives of the user
         results_drive = self.service.teamdrives().list(pageSize=10).execute()
 
@@ -28,8 +25,6 @@ class REST_API(google_api.API):
         :param drive: the drive to look for files
         :return: a dictionary containing the files inside the specified team drive
         """
-        if self.service is None:
-            self.get_service()
 
         # get the files in the drive
         results_file = self.service.files().list(pageSize=20, includeTeamDriveItems=True, corpora='teamDrive',
@@ -48,9 +43,6 @@ class REST_API(google_api.API):
         :param file: the file to look for revisions
         :return: a dictionary containing the revisions of the specified file
         """
-
-        if self.service is None:
-            self.get_service()
 
         # get the revisions of the file
         revisions_json = self.service.revisions().list(fileId=file['id'],
@@ -120,9 +112,6 @@ class REST_API(google_api.API):
 
         :param file: the file whose info is going to be printed
         """
-
-        if self.service is None:
-            self.get_service()
 
         self.print_file_basic_info(file)
         print("\t------------------------------------------")

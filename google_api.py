@@ -11,17 +11,15 @@ class API:
         self.name = name
         self.version = version
         self.api_name = api_name
-        self.service = None
+        self.service = self.get_service()
 
     def get_service(self):
-        if self.service is None:
-            store = file.Storage(self.token)
-            creds = store.get()
+        store = file.Storage(self.token)
+        creds = store.get()
 
-            if not creds or creds.invalid:
-                flow = client.flow_from_clientsecrets('credentials.json', self.scope)
-                creds = tools.run_flow(flow, store)
+        if not creds or creds.invalid:
+            flow = client.flow_from_clientsecrets('credentials.json', self.scope)
+            creds = tools.run_flow(flow, store)
 
-            self.service = build(self.name, self.version, http=creds.authorize(Http()))
+        return build(self.name, self.version, http=creds.authorize(Http()))
 
-        return (self.service) # defensive programming

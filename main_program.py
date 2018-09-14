@@ -15,9 +15,6 @@ def main():
     apis = {'rest':     rest_api.REST_API('token_REST.json',     SCOPES_REST,     'drive',        'v3', 'rest'),
             'activity': activity_api.ACTIVITY_API('token_ACTIVITY.json', SCOPES_ACTIVITY, 'appsactivity', 'v1', 'activity')}
 
-    for api in apis:
-        apis[api].get_service()
-
     # get all team drives of user
     team_drives = apis['rest'].get_team_drives()
 
