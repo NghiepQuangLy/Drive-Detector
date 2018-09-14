@@ -63,7 +63,7 @@ class REST_API(google_api.API):
 
         # prints info of file in format
         print('\t', '{:21}'.format('Name:'), file['name'], '\n\t', '{:21}'.format('ID:'), file['id'], '\n\t',
-              '{:21}'.format('Trashed'), file['trashed'], '\n\t', '{:22}'.format('Last Modifying User:'), end="")
+              '{:21}'.format('Trashed:'), file['trashed'], '\n\t', '{:22}'.format('Last Modifying User:'), end="")
 
         # check if the last modifying user name is available
         try:

@@ -24,8 +24,7 @@ class ACTIVITY_API(google_api.API):
             for change in changes:
                 event = change['combinedEvent']
                 user = event.get('user', None)
-                target = event.get('target', None)
-                if user is None or target is None:
+                if user is None:
                     continue
                 time = datetime.datetime.fromtimestamp(
                     int(event['eventTimeMillis'])/1000)
