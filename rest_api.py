@@ -29,7 +29,7 @@ class REST_API(google_api.API):
         # get the files in the drive
         results_file = self.service.files().list(pageSize=20, includeTeamDriveItems=True, corpora='teamDrive',
                                             supportsTeamDrives=True, teamDriveId=drive['id'],
-                                            fields="nextPageToken, files(id, name, capabilities, lastModifyingUser)").execute()
+                                            fields="nextPageToken, files(id, name, mimeType, capabilities, lastModifyingUser)").execute()
 
         # convert the result into a dictionary data structure
         files = results_file.get('files', [])
