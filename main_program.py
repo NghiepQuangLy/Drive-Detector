@@ -50,9 +50,7 @@ def main():
     else:
         print('F I L E S:')
         for a_file in files:
-            if a_file.get('mimeType') == 'application/vnd.google-apps.folder':
-                print()
-            else:
+            if a_file.get('mimeType') != 'application/vnd.google-apps.folder':
                 apis['rest'].print_file_all_info(a_file)
 
                 file_changes = apis['activity'].get_changes(a_file['id'])

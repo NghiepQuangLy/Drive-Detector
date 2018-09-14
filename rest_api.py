@@ -29,7 +29,7 @@ class REST_API(google_api.API):
         # get the files in the drive
         results_file = self.service.files().list(pageSize=20, includeTeamDriveItems=True, corpora='teamDrive',
                                             supportsTeamDrives=True, teamDriveId=drive['id'],
-                                            fields="nextPageToken, files(id, name, mimeType, capabilities, lastModifyingUser)").execute()
+                                            fields="nextPageToken, files(id, name, mimeType, trashed, capabilities, lastModifyingUser)").execute()
 
         # convert the result into a dictionary data structure
         files = results_file.get('files', [])
@@ -63,7 +63,7 @@ class REST_API(google_api.API):
 
         # prints info of file in format
         print('\t', '{:21}'.format('Name:'), file['name'], '\n\t', '{:21}'.format('ID:'), file['id'], '\n\t',
-              '{:22}'.format('Last Modifying User:'), end="")
+              '{:21}'.format('Trashed'), file['trashed'], '\n\t', '{:22}'.format('Last Modifying User:'), end="")
 
         # check if the last modifying user name is available
         try:
