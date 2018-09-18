@@ -12,7 +12,7 @@
 
 #3. If this doesn't work, I recommend either reinstalling a later version of python which has pip installed. Otherwise you can just try to
 # install pip separately, then try. This didn't work with my python 3.6 at home, but worked with python 3.7.
-
+import mpld3
 import matplotlib.pyplot as plt
 import numpy as np
 #def histogram(users):
@@ -107,4 +107,4 @@ autolabel(deletions, "center")
 autolabel(edits,"center")
 autolabel(comments,"center")
 #DISPLAY the graph
-plt.show()
+mpld3.show()

@@ -12,7 +12,7 @@
 
 #3. If this doesn't work, I recommend either reinstalling a later version of python which has pip installed. Otherwise you can just try to
 # install pip separately, then try. This didn't work with my python 3.6 at home, but worked with python 3.7.
-
+import mpld3
 import random
 import matplotlib.pyplot as plt
 
@@ -38,7 +38,7 @@ def pie_chart(users):
     plt.title('Number of revisions per modifying user')
 
     #DISPLAY the pie chart
-    plt.show()
+    mpld3.show()
 
     #------------------------------------------------------------------------------------------------
 #test case
