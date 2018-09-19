@@ -184,6 +184,3 @@ class Folder:
                     self.contribution[user] = 1
 
         return results_contribution
-
-    def update_contribution(self):
-

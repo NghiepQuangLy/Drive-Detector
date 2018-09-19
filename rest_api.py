@@ -1,5 +1,4 @@
 import google_api
-import json
 
 class REST_API(google_api.API):
 
@@ -14,7 +13,7 @@ class REST_API(google_api.API):
         results_drive = self.service.teamdrives().list(pageSize=10).execute()
 
         # convert the result into a dictionary structure
-        team_drives = json.loads(json.dumps(results_drive['teamDrives']))
+        team_drives = results_drive.get('teamDrives', [])
 
         return team_drives
 
@@ -49,6 +48,6 @@ class REST_API(google_api.API):
                                                     fields="revisions(id, modifiedTime, lastModifyingUser)").execute()
 
         # convert the result into a dictionary data structure
-        revisions = json.loads(json.dumps(results_revision['revisions']))
+        revisions = results_revision.get('revisions', [])
 
         return revisions

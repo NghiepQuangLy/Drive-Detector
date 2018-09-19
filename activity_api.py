@@ -8,6 +8,8 @@ class ACTIVITY_API(google_api.API):
         """
 
         # Call the Drive Activity API
-        results = self.service.activities().list(source='drive.google.com', drive_fileId=file_id, pageSize=20).execute()
-        activities = results.get('activities', [])
+        results_activity = self.service.activities().list(source='drive.google.com', drive_fileId=file_id, pageSize=20).execute()
+
+        activities = results_activity.get('activities', [])
+
         return activities
