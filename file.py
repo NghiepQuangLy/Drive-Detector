@@ -103,7 +103,7 @@ class File:
         print('\t',   '{:21}'.format('Name:'), self.name,
               '\n\t', '{:21}'.format('ID:'), self.id,
               '\n\t', '{:21}'.format('Trashed:'), self.trashed,
-              '\n\t', '{:22}'.format('Last Modifying User:'), self.last_mod_user)
+              '\n\t', '{:21}'.format('Last Modifying User:'), self.last_mod_user)
 
     def print_revisions(self):
         """
@@ -168,13 +168,22 @@ class File:
 class Folder:
     def __init__(self, files):
         self.files = files
-        self.contribution = {}
-        self.calculate_contribution()
+        self.contribution = self.calculate_contribution()
+
+    def add_file(self, file):
+        self.files.append(file)
 
     def calculate_contribution(self):
+        results_contribution = {}
+
         for file in files:
             for user in file.contribution:
                 try:
                     self.contribution[user] = self.contribution[user] + 1
                 except KeyError:
                     self.contribution[user] = 1
+
+        return results_contribution
+
+    def update_contribution(self):
+
