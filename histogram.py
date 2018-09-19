@@ -107,4 +107,7 @@ autolabel(deletions, "center")
 autolabel(edits,"center")
 autolabel(comments,"center")
 #DISPLAY the graph
+fig = plt.figure()
+mpld3.save_html(fig, "test1.html")
+mpld3.fig_to_html(fig, template_type="simple")
 mpld3.show()

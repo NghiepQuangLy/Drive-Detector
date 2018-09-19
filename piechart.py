@@ -12,13 +12,14 @@
 
 #3. If this doesn't work, I recommend either reinstalling a later version of python which has pip installed. Otherwise you can just try to
 # install pip separately, then try. This didn't work with my python 3.6 at home, but worked with python 3.7.
+import time
 import mpld3
 import random
 import matplotlib.pyplot as plt
 
 #ignore this, was just for testing random values
 import numpy as np
-np.random.seed(444)
+np.random.seed(int(time.time()))
 #making a function which can be called from the flask file
 def pie_chart(users):
     #LIST to hold the integer data (whatever it is we want that to be, for each pie chart)
@@ -28,17 +29,21 @@ def pie_chart(users):
     users = users.keys()
 
     #LIST to hold colours for each modifying user
-    color = ["red", "blue", "green", "yellow", "purple", "orange", "white", "black"]
+    color = ["red", "blue", "green", "yellow", "purple", "orange", "black"]
     #List generated to hold random colors for different users
-    rand_colours = [random.choice(color) for i in range(len(users))]
+    rand_colours = [random.sample(color, 1) for i in range(len(users))]
 
     #CALL the pie function from the api which takes the integer data, category data, colour data, starting angle of the pie chart segments (this doesn't matter), then autopct puts labels on the pie chart segments if it's wanted)
     plt.pie(slices_numberOfRevisions, labels=users, colors=rand_colours, startangle=90, autopct='%.1f%%', shadow=True,radius = 1)
 
     plt.title('Number of revisions per modifying user')
-
+    plt.show()
+    fig = plt.figure()
+    mpld3.save_html(fig, "test.html")
+    mpld3.fig_to_html(fig, template_type="simple")
+    #mpld3.show()
     #DISPLAY the pie chart
-    mpld3.show()
+    #mpld3.show()
 
     #------------------------------------------------------------------------------------------------
 #test case
