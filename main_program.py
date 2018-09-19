@@ -55,6 +55,8 @@ def main():
 
                 current_file = file.File(a_file, apis['rest'], apis['activity'])
                 current_file.print_all_info()
+                print(current_file.contribution)
+                print(current_file.timeline)
 
                 print()
 

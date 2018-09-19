@@ -1,9 +1,36 @@
 import datetime
 
 class File:
+    """
+    File stores the information of a file:
+        - id of file
+        - name of file
+        - if the file has been deleted
+        - if the user has the permission to read the revisions of the file
+        - service of the revision api to be used to retrieve the file's revisions
+        - service of the change api to be used to retrieve the file's changes
+        - revisions of file
+        - changes of file
+        - contributors of file and their contribution in the file
+        - changes represented in a timeline
+    """
 
     class Revision:
+        """
+        Revision stores the information of a revision:
+            - id of revision
+            - time of revision
+            - last modifying user of revision
+        """
+
         def __init__(self, google_api_revision_data):
+            """
+            Constructor of the Revision class
+            If the name of the last modifying user of the revision can not be found, the last_mod_user field is left blank.
+
+            :param google_api_revision_data: the Revision data structure returned from Google API
+            """
+
             self.id =                google_api_revision_data.get('id')
             self.mod_time =          google_api_revision_data.get('modifiedTime')
 
@@ -13,7 +40,32 @@ class File:
                 self.last_mod_user = ''
 
     class Change:
+        """
+        Change stores the information of a change:
+            - name of user who made the change
+            - type of change:
+                1.  comment
+                2.  create
+                3.  edit
+                4.  emptyTrash
+                5.  move
+                6.  permissionChange
+                7.  rename
+                8.  trash
+                9.  unknown
+                10. untrash
+                11. upload
+            - time of change
+        """
+
         def __init__(self, google_api_change_data):
+            """
+            Constructor of the Change class
+            If the name of the user who made the change can not be found, the user field is left blank.
+
+            :param google_api_change_data: the Change data structure returned from Google API
+            """
+
             event =                  google_api_change_data['combinedEvent']
 
             self.user =              event.get('user', None)
@@ -26,6 +78,14 @@ class File:
             self.time =              datetime.datetime.fromtimestamp(int(event['eventTimeMillis']) / 1000)
 
     def __init__(self, google_api_file_data, revision_api, change_api):
+        """
+        Constructor of the File class
+        If the name of the last modifying user of the file can not be found, the last_mod_user field is left blank.
+
+        :param google_api_file_data: the File data structure returned from Google API
+        :param revision_api: service of the revision api to be used to retrieve the file's revisions
+        :param change_api: service of the change api to be used to retrieve the file's changes
+        """
 
         self.id =                google_api_file_data['id']
         self.name =              google_api_file_data['name']
@@ -46,30 +106,52 @@ class File:
         self.timeline =          self.get_timeline()
 
     def get_revisions(self):
+        """
+        Gets the revisions of the file
+        If the file has no revisions, an empty array will be returned.
+
+        :return: an array containing the revisions of the file
+        """
+
         results_revision = []
 
+        # use the service of the revision api to retrieve the revisions
         revisions = self.revision_api.get_revisions(self.id)
 
+        # put all the revisions into the returned array
         for revision in revisions:
             results_revision.append(self.Revision(revision))
 
         return results_revision
 
     def get_changes(self):
+        """
+        Gets the changes of the file
+        If the file has no changes, an empty array will be returned.
+
+        :return: an array containing the changes of the file
+        """
+
         results_change = []
 
+        # use the service of the change api to retrieve the changes
         changes = self.change_api.get_changes(self.id)
 
+        # put all the changes into the returned array
         for change in changes:
             results_change.append(self.Change(change))
 
         return results_change
 
     def get_contribution(self):
-        results_contribution = {}
+        """
+        Gets the name of the contributors of the file and their contribution in the file
 
-        if not self.changes:
-            return
+        :return: a dictionary containing the name of the contributors as keys and the data stored at the keys are how
+                 many actions the corresponding contributor performed towards the file
+        """
+
+        results_contribution = {}
 
         for change in self.changes:
             if change.user is not None:
@@ -82,9 +164,6 @@ class File:
 
     def get_timeline(self):
         results_timeline = []
-
-        if not self.changes:
-            return
 
         for change in self.changes:
             results_timeline.append((change.time, change.user))
@@ -172,15 +251,17 @@ class Folder:
 
     def add_file(self, file):
         self.files.append(file)
+        self.calculate_contribution_a_file(file)
 
-    def calculate_contribution(self):
-        results_contribution = {}
+    def calculate_contribution_a_file(self, file):
+        for user in file.contribution:
+            try:
+                self.contribution[user] = self.contribution[user] + 1
+            except KeyError:
+                self.contribution[user] = 1
+
+    def calculate_contribution_all_files(self):
+        self.contribution = {}
 
         for file in files:
-            for user in file.contribution:
-                try:
-                    self.contribution[user] = self.contribution[user] + 1
-                except KeyError:
-                    self.contribution[user] = 1
-
-        return results_contribution
+            self.calculate_contribution_a_file(file)

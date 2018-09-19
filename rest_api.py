@@ -1,6 +1,14 @@
 import google_api
 
-class REST_API(google_api.API):
+class REST_API(google_api.GOOGLE_API):
+    """
+    REST_API provides 3 services offered by Google Drive REST API:
+        - get team drives of a user
+        - get files of a drive
+        - get revisions of a file
+
+    Permission scopes of REST_API: https://developers.google.com/identity/protocols/googlescopes#drivev3
+    """
 
     def get_team_drives(self):
         """
@@ -21,14 +29,14 @@ class REST_API(google_api.API):
         """
         Gets the first 20 files in a team drive
 
-        :param drive: the drive to look for files
+        :param drive_id: the drive id of the drive to look for files
         :return: a dictionary containing the files inside the specified team drive
         """
 
         # get the files in the drive
         results_file = self.service.files().list(pageSize=20, includeTeamDriveItems=True, corpora='teamDrive',
                                             supportsTeamDrives=True, teamDriveId=drive_id,
-                                            fields="nextPageToken, files(id, name, mimeType, trashed, capabilities, lastModifyingUser)").execute()
+                                            fields="nextPageToken, files(id, name, mimeType, parents, trashed, capabilities, lastModifyingUser)").execute()
 
         # convert the result into a dictionary data structure
         files = results_file.get('files', [])
@@ -39,7 +47,7 @@ class REST_API(google_api.API):
         """
         Gets all the available revisions of a file
 
-        :param file: the file to look for revisions
+        :param file_id: the file id of the file to look for revisions
         :return: a dictionary containing the revisions of the specified file
         """
 
