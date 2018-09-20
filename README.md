@@ -1,2 +1,1 @@
-The updated Project Inception, Product Backlog, Sprint Backlog for Sprint 2 and 1 combined.
-The Definition of Done has not been completely revised yet.
+Modifications in Project Inception and Sprint Backlog #2 to better indicate the effort and estimated velocity.
