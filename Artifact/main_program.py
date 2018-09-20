@@ -51,9 +51,23 @@ def main():
         print('F I L E S:')
         for a_file in files:
 
-            # If found folder file, skip retrieving information from folder
+            # If found folder file, prompt user, and ask if the user wants the folder retrieved.
+
             if a_file.get('mimeType') == 'application/vnd.google-apps.folder':
-                print('')
+                print('Folder : ' + a_file.get('name') + ' found')
+                print('\n')
+                user_input_retrieve = input("Would you like to retrieve the files in the folder? (y/n): ")
+
+                while (user_input_retrieve != "n") and (user_input_retrieve != "y"):
+                    print('\n')
+                    print("Invalid input, please insert valid input.")
+                    user_input_retrieve = input("Would you like to retrieve the files in the folder? (y/n): ")
+
+                if user_input_retrieve == "n":
+                    return
+                else:
+                    print('\n')
+
             else:
 
                 apis['rest'].print_file_all_info(a_file)
