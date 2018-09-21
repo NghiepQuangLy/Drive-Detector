@@ -163,6 +163,12 @@ class File:
         return results_contribution
 
     def get_timeline(self):
+        """
+        Gets the changes that occurred to the file in a chronological order
+
+        :return: an array containing the time of the change and the user responsible for that change
+        """
+
         results_timeline = []
 
         for change in self.changes:
@@ -174,8 +180,6 @@ class File:
         """
         Prints the name, ID, last modifying user's name of a file
         If the last modifying user's name is not available, nothing will be printed.
-
-        :param file: the file whose info we want to print
         """
 
         # prints info of file in format
@@ -190,8 +194,6 @@ class File:
         address.
         If the file does not allow reading of its revisions, nothing will be printed.
         If the last modifying user's name or email address is not available, nothing will be printed.
-
-        :param file: the file whose revisions are going to be printed
         """
 
         # checks if we can read the revisions of the file
@@ -213,8 +215,6 @@ class File:
     def print_changes(self):
         """
         Prints the changes of a file including the time of change, user who made the change and the type of change.
-
-        :param file: the file whose revisions are going to be printed
         """
 
         if not self.changes:
@@ -232,8 +232,6 @@ class File:
         """
         Prints the name, ID, last modifying user's name of a file and its revisions including the revision's id, modified
         time, last modifying user's name and email address
-
-        :param file: the file whose info is going to be printed
         """
 
         self.print_basic_info()
@@ -247,7 +245,7 @@ class File:
 class Folder:
     def __init__(self, files):
         self.files = files
-        self.contribution = self.calculate_contribution()
+        self.calculate_contribution()
 
     def add_file(self, file):
         self.files.append(file)
