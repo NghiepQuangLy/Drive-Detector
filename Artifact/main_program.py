@@ -45,8 +45,9 @@ def main():
 
     files = apis['rest'].get_files(drive)
 
-    # List of folders found
+    # Recording drive statistics
     list_of_folders = []
+    files_count = 0
 
     if not files:
         print('No files found')
@@ -76,14 +77,22 @@ def main():
 
             else:
 
+                files_count = files_count + 1
                 apis['rest'].print_file_all_info(a_file)
                 file_changes = apis['activity'].get_changes(a_file['id'])
                 apis['activity'].print_changes(file_changes)
 
                 print()
 
-    print("Folders in drive: " + str(list_of_folders))
+    # Reproduce drive statistics
 
+    print('\n')
+    print("Drive Summary")
+    print("------------------------")
+    print("Folders in drive: " + str(list_of_folders))
+    print("Amount of files in drive: " + str(files_count))
+
+    print('\n')
     print('*********************************')
 
 if __name__ == '__main__':
