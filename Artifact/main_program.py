@@ -45,6 +45,9 @@ def main():
 
     files = apis['rest'].get_files(drive)
 
+    # List of folders found
+    list_of_folders = []
+
     if not files:
         print('No files found')
     else:
@@ -54,9 +57,12 @@ def main():
             # If found folder file, prompt user, and ask if the user wants the folder retrieved.
 
             if a_file.get('mimeType') == 'application/vnd.google-apps.folder':
+                list_of_folders.append(a_file.get('name'))
                 print('Folder : ' + a_file.get('name') + ' found')
                 print('\n')
                 user_input_retrieve = input("Would you like to retrieve the files in the folder? (y/n): ")
+
+                # Data Validation
 
                 while (user_input_retrieve != "n") and (user_input_retrieve != "y"):
                     print('\n')
@@ -75,6 +81,8 @@ def main():
                 apis['activity'].print_changes(file_changes)
 
                 print()
+
+    print("Folders in drive: " + str(list_of_folders))
 
     print('*********************************')
 
