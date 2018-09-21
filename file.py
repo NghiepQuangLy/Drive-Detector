@@ -75,7 +75,7 @@ class File:
                 self.user =          self.user['name']
 
             self.type =              event['primaryEventType']
-            self.time =              datetime.datetime.fromtimestamp(int(event['eventTimeMillis']) / 1000)
+            self.time =              datetime.datetime.fromtimestamp(int(event['eventTimeMillis']) / 1000).strftime('%Y-%m-%d %H:%M:%S')
 
     def __init__(self, google_api_file_data, revision_api, change_api):
         """
@@ -176,19 +176,26 @@ class File:
 
         return results_timeline
 
-    def print_basic_info(self):
+    def get_basic_description(self):
         """
         Prints the name, ID, last modifying user's name of a file
         If the last modifying user's name is not available, nothing will be printed.
         """
+        uniform_format = '{:21} {:10}'
 
-        # prints info of file in format
-        print('\t',   '{:21}'.format('Name:'), self.name,
-              '\n\t', '{:21}'.format('ID:'), self.id,
-              '\n\t', '{:21}'.format('Trashed:'), self.trashed,
-              '\n\t', '{:21}'.format('Last Modifying User:'), self.last_mod_user)
+        separator = '\n'
 
-    def print_revisions(self):
+        tags   = ['Name:',   'ID:',   'Trashed:',        'Last Modifying User:']
+        values = [self.name, self.id, str(self.trashed), self.last_mod_user]
+
+        data = []
+
+        for tag, value in zip(tags, values):
+            data.append(uniform_format.format(tag, value))
+
+        return separator.join(data)
+
+    def get_revisions_description(self):
         """
         Prints the revisions of a file including the revision's id, modified time, last modifying user's name and email
         address.
@@ -198,35 +205,50 @@ class File:
 
         # checks if we can read the revisions of the file
         if not self.canReadRevisions:
-            print("\tCan not read revision - NO PERMISSION")
-            return
+            return 'Can not read revision - NO PERMISSION'
 
         if not self.revisions:
-            print('\tNo revision.')
-            return
+            return 'No revision'
+
+        uniform_format = '{:12} {:27} {:29}'
+
+        separator = '\n'
+
+        data = [''] * (len(self.revisions) + 1)
 
         # prints the column names
-        print('\t', '{:12} {:27} {:29}'.format("Revision ID", "Modified time", "Last Modifying User"))
+        data[0] = uniform_format.format('Revision ID', 'Modified time', 'Last Modifying User')
 
+        i = 1
         # loops through all revisions and prints out their info
         for revision in self.revisions:
-            print('\t', '{:12} {:27} {:30}'.format(revision.id, revision.mod_time, revision.last_mod_user))
+            data[i] = uniform_format.format(revision.id, revision.mod_time, revision.last_mod_user)
+            i += 1
 
-    def print_changes(self):
+        return separator.join(data)
+
+    def get_changes_description(self):
         """
         Prints the changes of a file including the time of change, user who made the change and the type of change.
         """
 
         if not self.changes:
-            print('\tNo activity.')
-            return
+            return 'No activity'
+
+        uniform_format = '{:30} {:25} {:10}'
+
+        data = [''] * (len(self.changes) + 1)
 
         # prints the column names
-        print('\t', '{:30} {:25} {:10}'.format("Time", "User", "Action"))
+        data[0] = uniform_format.format("Time", "User", "Action")
 
         # loops through all changes and prints out their info
         for change in self.changes:
-            print('\t', change.time, '    {:25} {:10}'.format(change.user, change.type))
+            #data[i] = uniform_format.format
+            print(type(change.time))
+            print(change.time)
+            return
+            #print('\t', change.time, '    {:25} {:10}'.format(change.user, change.type))
 
     def print_all_info(self):
         """
@@ -234,17 +256,18 @@ class File:
         time, last modifying user's name and email address
         """
 
-        self.print_basic_info()
+        print(self.get_basic_description())
         print("\t------------------------------------------")
-        self.print_revisions()
+        print(self.get_revisions_description())
         print("\t------------------------------------------")
-        self.print_changes()
+        self.get_changes_description()
         print()
 
 
 class Folder:
     def __init__(self, files):
         self.files = files
+        self.contribution = {}
         self.calculate_contribution()
 
     def add_file(self, file):
@@ -259,7 +282,8 @@ class Folder:
                 self.contribution[user] = 1
 
     def calculate_contribution_all_files(self):
-        self.contribution = {}
+        if files:
+            self.contribution = {}
 
-        for file in files:
-            self.calculate_contribution_a_file(file)
+            for file in files:
+                self.calculate_contribution_a_file(file)
