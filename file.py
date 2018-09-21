@@ -237,31 +237,32 @@ class File:
 
         uniform_format = '{:30} {:25} {:10}'
 
+        separator = '\n'
+
         data = [''] * (len(self.changes) + 1)
 
         # prints the column names
         data[0] = uniform_format.format("Time", "User", "Action")
 
+        i = 1
         # loops through all changes and prints out their info
         for change in self.changes:
-            #data[i] = uniform_format.format
-            print(type(change.time))
-            print(change.time)
-            return
-            #print('\t', change.time, '    {:25} {:10}'.format(change.user, change.type))
+            data[i] = uniform_format.format(change.time, change.user, change.type)
+            i += 1
 
-    def print_all_info(self):
+        return separator.join(data)
+
+    def get_all_description(self):
         """
         Prints the name, ID, last modifying user's name of a file and its revisions including the revision's id, modified
         time, last modifying user's name and email address
         """
 
-        print(self.get_basic_description())
-        print("\t------------------------------------------")
-        print(self.get_revisions_description())
-        print("\t------------------------------------------")
-        self.get_changes_description()
-        print()
+        separator = '\n------------------------------------------\n'
+
+        all_description = [self.get_basic_description(), self.get_revisions_description(), self.get_changes_description()]
+
+        return separator.join(all_description)
 
 
 class Folder:
