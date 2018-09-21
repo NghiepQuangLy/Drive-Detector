@@ -15,7 +15,9 @@ Data representation in Charts:
     - Can be run inside IDE
 Main Logic Retrieving Changes:
     - Run in command line by typing in "python main_program.py"
-    
+
+The __pycache__ folder is unnecessary however we were unable to remove it in git.
+
 Branches:
 ml: Quang Ly
 vk: Vibhas Kamal
