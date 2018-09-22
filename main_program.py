@@ -55,8 +55,8 @@ def main():
 
                 current_file = file.File(a_file, apis['rest'], apis['activity'])
                 print(current_file.get_all_description())
-                print(current_file.contribution)
-                print(current_file.timeline)
+                print('Contribution:', current_file.contribution)
+                print('Timeline:', current_file.timeline)
 
                 print()
 
