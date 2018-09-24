@@ -25,13 +25,20 @@ def pie_chart(users):
     #LIST to hold the integer data (whatever it is we want that to be, for each pie chart)
     slices_numberOfRevisions = users.values()
 
-    #LIST to hold the category data (whatever it is we want that to be, for each pie chart)
-    users = users.keys()
-
-    #LIST to hold colours for each modifying user
+    # LIST to hold colours for each modifying user
     color = ["red", "blue", "green", "yellow", "purple", "orange", "black"]
-    #List generated to hold random colors for different users
-    rand_colours = [random.sample(color, 1) for i in range(len(users))]
+
+    # function to generate list with unique colors
+    def select(data):
+        if data != []:
+            elem = random.choice(data)
+            data.remove(elem)
+            return elem
+        else:
+            return None
+
+    # List generated to hold random colors for different users
+    rand_colours = [select(color) for i in range(len(users))]
 
     #CALL the pie function from the api which takes the integer data, category data, colour data, starting angle of the pie chart segments (this doesn't matter), then autopct puts labels on the pie chart segments if it's wanted)
     plt.pie(slices_numberOfRevisions, labels=users, colors=rand_colours, startangle=90, autopct='%.1f%%', shadow=True,radius = 1)
@@ -47,12 +54,12 @@ def pie_chart(users):
 
     #------------------------------------------------------------------------------------------------
 #test case
+
 users = {
-    'man': 0,
+    'man': 100,
     'tito': 29,
     'jack': 4,
     'bhas': 70,
     'mike': 18
 }
 pie_chart(users)
-
