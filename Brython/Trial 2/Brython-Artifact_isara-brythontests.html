@@ -1,0 +1,57 @@
+<html>
+
+<head>
+<meta charset="utf-8">
+<title>Test</title>
+</head>
+
+<body onload="brython(1)">
+
+<h1 style="text-align: center">Brython tests</h1>
+
+<div id="changetext">Sample Text</div>
+<input id="zone"><button id="mybutton">Click!</button>
+
+<div class="test" id="t1">
+	<button id="button0">Hi</button>
+	
+	<script type ="text/python" id="script0">
+	from browser import document, alert
+	
+	def hello(ev):
+		alert("Test")
+		
+	document["button0"].bind("click", hello)
+	</script>
+
+</div>
+
+<div class="test" id="t2">
+	<button id="button1">Click to change text</button>
+	
+	<script type ="text/python" id="script1">
+	from browser import document
+	
+	def change_text(ev):
+		document["changetext"].textContent = "Test123"
+		
+	document["button1"].bind("click", change_text)
+	</script>
+
+<div class="test" id="t3">
+	<script type ="text/python" id="script2">
+	from browser import document
+	
+	def change_to_specific(ev):
+		document["changetext"].textContent = document["zone"].value
+	
+	document["mybutton"].bind("click", change_to_specific)
+	
+	</script>
+
+<script src="brython.js"></script>
+<script src="brython_stdlib.js"></script>
+
+</body>
+
+</html>
