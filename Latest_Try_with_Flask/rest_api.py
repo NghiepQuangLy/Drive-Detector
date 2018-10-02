@@ -34,7 +34,7 @@ class REST_API(google_api.GOOGLE_API):
         """
 
         # get the files in the drive
-        results_file = self.service.files().list(pageSize=20, includeTeamDriveItems=True, corpora='teamDrive',
+        results_file = self.service.files().list(pageSize=1000, includeTeamDriveItems=True, corpora='teamDrive',
                                             supportsTeamDrives=True, teamDriveId=drive_id,
                                             fields="nextPageToken, files(id, name, mimeType, parents, trashed, capabilities, lastModifyingUser)").execute()
 

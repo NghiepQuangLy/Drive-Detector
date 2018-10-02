@@ -15,8 +15,7 @@ def main():
 
     # If modifying these scopes, delete the file token_ACTIVITY.json.
     SCOPES_ACTIVITY = 'https://www.googleapis.com/auth/activity'
-
-    ##############################################################
+    ##########################################################
 
     # Prints all the files in a team drive as well as their revisions
     # Prints all activities in a team drive
@@ -49,35 +48,34 @@ def main():
             output += "No such drive"
             return
 
-        output += 'D R I V E:' + str(drive['name'])
-
-    output += '\n*********************************'
-    output += "                                                                  "
+    output += 'D R I V E:' + str(drive['name'])
 
     files = apis['rest'].get_files(drive['id'])
 
     if not files:
-        output += '\nNo files found'
-        output += "                                                                  "
-
+        output += 'No files found'
     else:
-        output += '\nF I L E S:'
+        output += 'F I L E S:'
+        folders = {}
         for a_file in files:
-            if a_file.get('mimeType') != 'application/vnd.google-apps.folder':
+            if a_file.get('mimeType') != 'application/vnd.google-apps.folder' and not a_file.get('trashed'):
 
                 current_file = file.File(a_file, apis['rest'], apis['activity'])
-                output += "\n" + current_file.get_all_description()
-                output += "\n" + 'Contribution:' + str(current_file.contribution)
-                output += "\n" + 'Timeline:' + str(current_file.timeline)
 
-                output += "\n"
+                # get all the parents of a file
+                for parent in a_file.get('parents'):
+                    if parent not in folders:
+                        folders[parent] = []
 
-        output += "\n" + '*********************************'
+                    folders[parent].append(current_file)
+
+    for folder in folders:
+        output += str(folder) + str(folders[folder])
+    output += drive['id']
 
     # print(output)
     return output
 
-# return flask.Response('\n'.join)
 
 if __name__ == '__main__':
     main()

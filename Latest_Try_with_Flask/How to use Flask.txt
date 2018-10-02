@@ -1,0 +1,8 @@
+STEP 1:
+C:\path\to\app>set FLASK_APP=hello.py
+
+STEP 2:
+flask run
+
+
+If any changes are made to the file with which flask is being used, the server has to be restarted.
