@@ -16,11 +16,14 @@
 from main_program import *
 import matplotlib.pyplot as plt
 from random import randint
+from matplotlib.colors import LinearSegmentedColormap
+import colorsys
 
 
 #ignore this, was just for testing random values
 import numpy as np
 np.random.seed(444)
+
 
 def create_pie_chart(drive_name, file_name, users, actions):
     #LIST to hold the integer data (whatever it is we want that to be, for each pie chart)
@@ -29,21 +32,21 @@ def create_pie_chart(drive_name, file_name, users, actions):
     #LIST to hold the category data (whatever it is we want that to be, for each pie chart)
     contributors = users
 
-    #LIST to hold colours for each modifying user
-    all_colors = ['b', 'g', 'r', 'c', 'm', 'y'] 
-    colors = [all_colors[randint(0,5)] for i in range(len(contributors))]
+    #random colour for each user
+    colors = []
+    N = len(contributors)
+    cmap = plt.cm.get_cmap("hsv", N+1)
+    for i in range(N):
+        colors.append(cmap(i))
 
     #CALL the pie function from the api which takes the integer data, category data, colour data, starting angle of the pie chart segments (this doesn't matter), then autopct puts labels on the pie chart segments if it's wanted)
     plt.pie(slices_numberOfRevisions, labels=contributors, colors=colors, startangle=90, autopct='%.1f%%')
 
-    plt.title('Total Actions Per User For File ' + file_name + ' In Drive ' + drive_name)
+    plt.title('% Contribution Per User For File "' + file_name[:] + '" In Drive "' + drive_name[0] + '"')
                    
     #DISPLAY the pie chart
     plt.show()
 
-    return plt
-
-create_pie_chart('FIT2101', 'testFile', ['yeeeeep', 'nahhhh', 'woooo'], [1, 4, 2])
 
 #------------------------------------------------------------------------------------------------
 
