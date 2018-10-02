@@ -2,6 +2,7 @@ import google_api
 import rest_api
 import activity_api
 import file
+from piechart import *
 
 # If modifying these scopes, delete the file token_REST.json.
 SCOPES_REST = 'https://www.googleapis.com/auth/drive.readonly'
@@ -61,15 +62,13 @@ def main():
                 print('Contribution:', current_file.contribution)
                 print('Timeline:', current_file.timeline)
 
+                print('name of file: ', current_file.name)
                 names = []
                 vals = []
                 for name, val in current_file.contribution.items():
                     names.append(name)
                     vals.append(val)
-                print('modifying users of this file: ', names)
-                print('respective no. modifies: ', vals)
-                print(drive_name)
-                print(current_file.name)
+                create_pie_chart(drive_name, current_file.name, names, vals)
 
     print('*********************************')
 
