@@ -50,27 +50,32 @@ def main():
 
         output += 'D R I V E:' + str(drive['name'])
 
-    output += '*********************************'
+    output += '\n*********************************'
+    output += "                                                                  "
 
     files = apis['rest'].get_files(drive['id'])
 
     if not files:
-        output += 'No files found'
+        output += '\nNo files found'
+        output += "                                                                  "
+
     else:
-        output += 'F I L E S:'
+        output += '\nF I L E S:'
         for a_file in files:
             if a_file.get('mimeType') != 'application/vnd.google-apps.folder':
 
                 current_file = file.File(a_file, apis['rest'], apis['activity'])
-                output += current_file.get_all_description()
-                output += 'Contribution:' + str(current_file.contribution)
-                output += 'Timeline:' + str(current_file.timeline)
+                output += "\n" + current_file.get_all_description()
+                output += "\n" + 'Contribution:' + str(current_file.contribution)
+                output += "\n" + 'Timeline:' + str(current_file.timeline)
 
                 output += "\n"
 
-        output += '*********************************'
+        output += "\n" + '*********************************'
 
     return output
+
+# return flask.Response('\n'.join)
 
 if __name__ == '__main__':
     main()
