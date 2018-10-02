@@ -63,10 +63,10 @@ def main():
                 print(current_file.get_all_description())
                 print('Contribution:', current_file.contribution)
                 print('Timeline:', current_file.timeline)
-
-                print('name of file: ', current_file.name)
+                
                 names = []
                 vals = []
+                
                 for name, val in current_file.contribution.items():
                     if name not in drive_users:
                         drive_users.append(name)
@@ -78,8 +78,18 @@ def main():
                                 
                     names.append(name)
                     vals.append(val)
+                    
+                for i in range(len(names)):
+                    if names[i] == '':
+                        names[i] = 'Unknown'
+                        
                 #pie chart for % contribution for the current file
                 create_pie_chart(drive_name, current_file.name, names, vals)
+                
+    for i in range(len(drive_users)):
+        if drive_users[i] == '':
+            drive_users[i] = 'Unknown'
+            
     #pie chart for % contribution for the entire drive
     create_pie_chart(drive_name, 'N/A (drive)', drive_users, drive_contr)
 
