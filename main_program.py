@@ -53,6 +53,8 @@ def main():
     if not files:
         print('No files found')
     else:
+        drive_users = []
+        drive_contr = []
         print('F I L E S:')
         for a_file in files:
             if a_file.get('mimeType') != 'application/vnd.google-apps.folder':
@@ -66,9 +68,20 @@ def main():
                 names = []
                 vals = []
                 for name, val in current_file.contribution.items():
+                    if name not in drive_users:
+                        drive_users.append(name)
+                        drive_contr.append(val)
+                    else:
+                        for i in range(len(drive_users)):
+                            if drive_users[i] == name:
+                                drive_contr[i] += val
+                                
                     names.append(name)
                     vals.append(val)
+                #pie chart for % contribution for the current file
                 create_pie_chart(drive_name, current_file.name, names, vals)
+    #pie chart for % contribution for the entire drive
+    create_pie_chart(drive_name, 'N/A (drive)', drive_users, drive_contr)
 
     print('*********************************')
 
