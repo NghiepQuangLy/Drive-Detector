@@ -292,3 +292,84 @@ class Folder:
 
             for file in self.files:
                 self.calculate_contribution_a_file(file)
+
+class Drive:
+    def __init__(self, google_api_drive_data, revision_api, change_api):
+        self.name =             google_api_drive_data['name']
+        self.id =               google_api_drive_data['id']
+        self.revision_api =     revision_api
+        self.change_api =       change_api
+        self.contents =         self.get_contents()
+        self.contribution =     {}
+        #self.calculate_contribution_all_files()
+
+    def get_contents(self):
+
+        def is_folder(file):
+            return file.get('mimeType') == 'application/vnd.google-apps.folder'
+
+        def in_folder(parent_id):
+            return parent_id != self.id
+
+        def get_files_not_in_folder():
+
+            files_not_in_folder = []
+
+            for file in files:
+                for parent in file.get('parents'):
+                    if not in_folder(parent):
+                        files_not_in_folder.append(file)
+
+            return files_not_in_folder
+
+        def get_folders():
+
+            folders_id_name = []
+
+            for file in files:
+                if is_folder(file) and not file.get('trashed'):
+                    folders_id_name.append((file.get('id'), file.get('name')))
+
+            return folders_id_name
+
+        def get_drive_contents_excluding_files_not_in_folder():
+
+            folders_and_their_contents = {}
+
+            for file in files:
+                if not is_folder(file) and not file.get('trashed'):
+                    current_file = File(file, self.revision_api, self.change_api)
+
+                    for parent in file.get('parents'):
+                        if in_folder(parent):
+                            if parent not in folders_and_their_contents:
+                                folders_and_their_contents[parent] = []
+
+                            folders_and_their_contents[parent].append(current_file)
+
+            return folders_and_their_contents
+
+        files = self.revision_api.get_files(self.id)
+
+        if not files:
+            return []
+        else:
+
+            folders_and_their_contents = get_drive_contents_excluding_files_not_in_folder()
+            files_not_in_folder = get_files_not_in_folder()
+            folders_id_name = get_folders()
+
+            for folder in folders_id_name:
+                folders_and_their_contents[folder[1]] = folders_and_their_contents.pop(folder[0])
+
+            drive_contents = []
+
+            for folder_name in folders_and_their_contents:
+                current_folder = Folder(folder_name, folders_and_their_contents[folder_name])
+                drive_contents.append(current_folder)
+
+            for file_not_in_folder in files_not_in_folder:
+                drive_contents.append(file_not_in_folder)
+
+            return drive_contents
+
