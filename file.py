@@ -266,10 +266,11 @@ class File:
 
 
 class Folder:
-    def __init__(self, files):
+    def __init__(self, name, files):
+        self.name = name
         self.files = files
         self.contribution = {}
-        self.calculate_contribution()
+        self.calculate_contribution_all_files()
 
     def add_file(self, file):
         self.files.append(file)
@@ -277,14 +278,17 @@ class Folder:
 
     def calculate_contribution_a_file(self, file):
         for user in file.contribution:
-            try:
-                self.contribution[user] = self.contribution[user] + 1
-            except KeyError:
-                self.contribution[user] = 1
+            number_of_actions = file.contribution[user]
+            while number_of_actions > 0:
+                try:
+                    self.contribution[user] = self.contribution[user] + 1
+                except KeyError:
+                    self.contribution[user] = 1
+                number_of_actions -= 1
 
     def calculate_contribution_all_files(self):
-        if files:
+        if self.files:
             self.contribution = {}
 
-            for file in files:
+            for file in self.files:
                 self.calculate_contribution_a_file(file)
