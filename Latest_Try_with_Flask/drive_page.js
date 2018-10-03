@@ -1,5 +1,5 @@
-let listElement = document.getElementById('TrialArea');
-let listHTML = "";
-listHTML += "<tr>Hello</tr>";
-//listHTML += "<tr>This is a trial area</tr>";
-listElement.innerHTML = listHTML;
+let outputAreaRef = document.getElementById('abc');
+//let tableHTML = "<table border=\"1\"><tr><th>A</th><th>B</th><th>(A AND B)</th></tr>";
+//tableHTML += "</table>";
+let x = "Hello there"
+outputAreaRef.innerHTML = x;
