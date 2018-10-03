@@ -67,14 +67,14 @@ def main():
                     if parent not in folders:
                         folders[parent] = []
 
-                    folders[parent].append(current_file)
+                    folders[parent].append(json.dumps(str(current_file)))
 
     for folder in folders:
-        output += str(folder) + str(folders[folder])
+        output += json.dumps(str(folder)) + json.dumps(str(folders[folder]))
     output += drive['id']
 
     # print(output)
-    return output
+    return json.dumps(output)
 
 
 if __name__ == '__main__':
