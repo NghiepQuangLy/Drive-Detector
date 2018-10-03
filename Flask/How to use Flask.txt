@@ -1,0 +1,9 @@
+STEP 1:
+Set path to folder where application is in.
+C:\path\to\app>set FLASK_APP=main_program_modified.py
+
+STEP 2:
+flask run
+
+
+If any changes are made to the file with which flask is being used, the server has to be restarted.
