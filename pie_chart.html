@@ -1,0 +1,51 @@
+
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<script type="text/javascript">
+function create_pie_chart(drive_name, file_name, users, contributions)
+    {
+        var driveName = drive_name; 
+        var fileName = file_name;
+        var usersArr = users;
+        var contributionsArr = contributions;
+        var N = usersArr.length;
+        var data = []
+
+        for (var i = 0; i < N; i++)
+            {
+                data.push({y: contributions[i], indexLabel: users[i]})
+            }
+
+            console.log(data)
+
+            window.onload = function () {
+            var chart = new CanvasJS.Chart("chartContainer",
+            {
+                theme: "theme3",
+                title:{
+                    text: "User %/Actions for " + fileName + " in Drive " + driveName
+                },		
+                data: [
+                {       
+                    type: "pie",
+                    showInLegend: true,
+                    toolTipContent: "{y} - #percent %",
+                    legendText: "{indexLabel}",
+                    dataPoints: data
+                }
+                ]
+            });
+            
+            chart.render();
+        }
+            }
+    
+create_pie_chart('Test_Drive', 'Test_File', ['A', 'B', 'C', 'D', 'E'], [14, 9, 32, 4, 18]);
+
+</script>
+<script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script></head>
+<body>
+<div id="chartContainer" style="height: 300px; width: 100%;"></div>
+</body>
