@@ -6,42 +6,46 @@
 <script type="text/javascript">
 function create_pie_chart(drive_name, file_name, users, contributions)
     {
-        var driveName = drive_name; 
-        var fileName = file_name;
-        var usersArr = users;
-        var contributionsArr = contributions;
-        var N = usersArr.length;
-        var data = []
-
+    
+        var driveName = drive_name; //string taken as paramater
+        var fileName = file_name; //string taken as parameter
+        var usersArr = users; //array of strings taken as parameter
+        var contributionsArr = contributions; //array of ints taken as parameter
+        var N = usersArr.length; //length of users &/or contributions array
+        var data = [] //empty array to store users:contributions in required format for graphing
+        
+        //filling the data array in the required format
         for (var i = 0; i < N; i++)
             {
                 data.push({y: contributions[i], indexLabel: users[i]})
             }
-
+            
+            //test print to see the structure
             console.log(data)
-
+            //graphing func
             window.onload = function () {
             var chart = new CanvasJS.Chart("chartContainer",
             {
-                theme: "theme3",
+                theme: "theme3", //colour/text selection
                 title:{
                     text: "User %/Actions for " + fileName + " in Drive " + driveName
-                },		
+                }, //title with parameters		
                 data: [
                 {       
-                    type: "pie",
-                    showInLegend: true,
-                    toolTipContent: "{y} - #percent %",
-                    legendText: "{indexLabel}",
-                    dataPoints: data
+                    type: "pie", //type of graph
+                    showInLegend: true, //legend or no legend
+                    toolTipContent: "{y} - #percent %", //value and % when hover over segment
+                    legendText: "{indexLabel}", //names of users
+                    dataPoints: data //data in the form of contributions : user
                 }
                 ]
             });
             
+            //create the graph
             chart.render();
         }
             }
-    
+//testing the func
 create_pie_chart('Test_Drive', 'Test_File', ['A', 'B', 'C', 'D', 'E'], [14, 9, 32, 4, 18]);
 
 </script>
