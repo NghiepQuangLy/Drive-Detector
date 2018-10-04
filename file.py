@@ -303,6 +303,15 @@ class Drive:
         self.contribution =     {}
         #self.calculate_contribution_all_files()
 
+    def get_folders(self):
+
+        folders = self.revision_api.get_folders(self.id)
+
+        for folder in folders:
+            current_folder = Folder(folder)
+
+            self.contents.append(current_folder)
+
     def get_contents(self):
 
         def is_folder(file):

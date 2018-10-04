@@ -19,6 +19,21 @@ def main():
     # get all team drives of user
     team_drives = apis['rest'].get_team_drives()
 
+    if team_drives:
+        for team_drive in team_drives:
+            if team_drive['name'] == 'FIT2101':
+                folders = apis['rest'].get_folders(team_drive['id'])
+                for folder in folders:
+                    print('******************\n',folder['name'], folder['id'])
+                    files_in_folder = apis['rest'].get_files_in_folder(folder['id'])
+                    for file_in_folder in files_in_folder:
+                        print(file_in_folder['name'])
+                files_not_in_folder = apis['rest'].get_files_not_in_folder(team_drive['id'])
+                for file_not_in_folder in files_not_in_folder:
+                    print('(((((((((((((((((\n',file_not_in_folder['name'])
+                    print('***********************')
+
+    """
     account_contents = []
 
     # if the user has no team drives
@@ -29,7 +44,7 @@ def main():
 
     for drive in account_contents:
         print(drive.name)
-
+    """
 
 if __name__ == '__main__':
     main()
