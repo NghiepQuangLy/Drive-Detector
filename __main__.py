@@ -22,7 +22,12 @@ def main():
     if team_drives:
         for team_drive in team_drives:
             if team_drive['name'] == 'FIT2101':
+                my_drive = file.Drive(team_drive, apis['rest'], apis['activity'])
+                for thing in my_drive.contents:
+                    print(thing.name)
+                """
                 folders = apis['rest'].get_folders(team_drive['id'])
+                
                 for folder in folders:
                     print('******************\n',folder['name'], folder['id'])
                     files_in_folder = apis['rest'].get_files_in_folder(folder['id'])
@@ -32,7 +37,7 @@ def main():
                 for file_not_in_folder in files_not_in_folder:
                     print('(((((((((((((((((\n',file_not_in_folder['name'])
                     print('***********************')
-
+                """
     """
     account_contents = []
 
