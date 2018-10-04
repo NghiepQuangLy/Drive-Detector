@@ -105,6 +105,9 @@ class File:
         self.contribution =      self.get_contribution()
         self.timeline =          self.get_timeline()
 
+    def to_json(self):
+        return {'id': self.id, 'name': self.name, 'contribution': self.contribution}
+
     def get_revisions(self):
         """
         Gets the revisions of the file
@@ -278,6 +281,15 @@ class Folder:
         self.contribution = {}
         self.calculate_contribution_all_files()
 
+    def to_json(self):
+
+        json_files = []
+
+        for file in self.files:
+            json_files.append(file.to_json())
+
+        return {'name': self.name, 'id': self.id, 'files': json_files, 'contribution': self.contribution}
+
     def get_files(self):
 
         self.files = []
@@ -318,6 +330,15 @@ class Drive:
 
         self.contribution =     {}
         #self.calculate_contribution_all_files()
+
+    def to_json(self):
+
+        json_contents = []
+
+        for content in self.contents:
+            json_contents.append(content.to_json())
+
+        return {'name': self.name, 'id': self.id, 'contents': json_contents, 'contribution': self.contribution}
 
     def get_folders(self):
 
