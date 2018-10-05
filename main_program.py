@@ -3,7 +3,7 @@ import rest_api
 import activity_api
 import file
 import json
-from flask import Flask
+from flask import Flask, jsonify, render_template, request
 app = Flask(__name__)
 
 # If modifying these scopes, delete the file token_REST.json.
@@ -12,7 +12,7 @@ SCOPES_REST = 'https://www.googleapis.com/auth/drive.readonly'
 # If modifying these scopes, delete the file token_ACTIVITY.json.
 SCOPES_ACTIVITY = 'https://www.googleapis.com/auth/activity'
 
-@app.route("/")
+@app.route("/", methods=['GET', 'POST'])
 def main():
     # Prints all the files in a team drive as well as their revisions
     # Prints all activities in a team drive
@@ -30,22 +30,14 @@ def main():
             current_drive = file.Drive(team_drive, apis['rest'], apis['activity'])
             account_contents.append(current_drive)
 
-            """
-            print('********************\n',team_drive['name'])
-            for thing in current_drive.contents:
-                print(thing.name)
-            print('********************')
-            """
 
     json_account = []
 
     for team_drive in account_contents:
         json_account.append(team_drive.to_json())
 
-    json_string = json.dumps(json_account)
-
-    return json_string
+    return render_template("server.html", account_data=json_account)
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
