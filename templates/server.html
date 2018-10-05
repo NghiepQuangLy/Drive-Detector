@@ -5,12 +5,29 @@
     <meta charset="utf-8">
     <title>Drive Detector</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">   
-    <p>{{account_data}}</p>
 </head>
 <p id="demo"></p>
-<script>
-console.log({{account_data|tojson}})
-</script>
 
+<body>
+<script>
+var user_data = {{account_data|tojson}};
+console.log(user_data);
+for (var i = 0; i < user_data.length; i++)
+    {
+        var drive_n = document.createElement("BUTTON");
+        drive_n.innerHTML = user_data[i].name;
+        document.body.appendChild(drive_n);
+        
+        var contents = document.createElement("P");
+        for (var j = 0; j < user_data[i].contents.length; j++)
+            {
+                var child_n = document.createElement("BUTTON");
+                child_n.innerHTML = user_data[i].contents[j].name;
+                contents.appendChild(child_n);
+            }
+        document.body.appendChild(contents);
+    }
+</script>
+</body>
 
 </html>

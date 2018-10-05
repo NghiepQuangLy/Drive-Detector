@@ -12,7 +12,7 @@ SCOPES_REST = 'https://www.googleapis.com/auth/drive.readonly'
 # If modifying these scopes, delete the file token_ACTIVITY.json.
 SCOPES_ACTIVITY = 'https://www.googleapis.com/auth/activity'
 
-@app.route("/", methods=['GET', 'POST'])
+@app.route("/", methods=['GET'])
 def main():
     # Prints all the files in a team drive as well as their revisions
     # Prints all activities in a team drive
