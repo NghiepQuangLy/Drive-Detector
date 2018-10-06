@@ -105,6 +105,9 @@ class File:
         self.contribution =      self.get_contribution()
         self.timeline =          self.get_timeline()
 
+    def to_json(self):
+        return {'id': self.id, 'name': self.name, 'contribution': self.contribution, 'type': 'file'}
+
     def get_revisions(self):
         """
         Gets the revisions of the file
@@ -266,25 +269,98 @@ class File:
 
 
 class Folder:
-    def __init__(self, files):
-        self.files = files
-        self.contribution = {}
-        self.calculate_contribution()
+    def __init__(self, google_api_folder_data, revision_api, change_api):
+        self.name =             google_api_folder_data['name']
+        self.id =               google_api_folder_data['id']
+        self.revision_api =     revision_api
+        self.change_api =       change_api
 
-    def add_file(self, file):
-        self.files.append(file)
-        self.calculate_contribution_a_file(file)
+        self.files = []
+        self.get_files()
+
+        self.contribution = {}
+        self.calculate_contribution_all_files()
+
+    def to_json(self):
+
+        json_files = []
+
+        for file in self.files:
+            json_files.append(file.to_json())
+
+        return {'name': self.name, 'id': self.id, 'files': json_files, 'contribution': self.contribution, 'type': 'folder'}
+
+    def get_files(self):
+
+        self.files = []
+
+        files = self.revision_api.get_files_in_folder(self.id)
+
+        for file in files:
+            current_file = File(file, self.revision_api, self.change_api)
+
+            self.files.append(current_file)
 
     def calculate_contribution_a_file(self, file):
         for user in file.contribution:
-            try:
-                self.contribution[user] = self.contribution[user] + 1
-            except KeyError:
-                self.contribution[user] = 1
+            number_of_actions = file.contribution[user]
+            while number_of_actions > 0:
+                try:
+                    self.contribution[user] = self.contribution[user] + 1
+                except KeyError:
+                    self.contribution[user] = 1
+                number_of_actions -= 1
 
     def calculate_contribution_all_files(self):
-        if files:
+        if self.files:
             self.contribution = {}
 
-            for file in files:
+            for file in self.files:
                 self.calculate_contribution_a_file(file)
+
+class Drive:
+    def __init__(self, google_api_drive_data, revision_api, change_api):
+        self.name =             google_api_drive_data['name']
+        self.id =               google_api_drive_data['id']
+        self.revision_api =     revision_api
+        self.change_api =       change_api
+
+        self.contents = []
+        self.get_contents()
+
+        self.contribution =     {}
+        #self.calculate_contribution_all_files()
+
+    def to_json(self):
+
+        json_contents = []
+
+        for content in self.contents:
+            json_contents.append(content.to_json())
+
+        return {'name': self.name, 'id': self.id, 'contents': json_contents, 'contribution': self.contribution, 'type': 'drive'}
+
+    def get_folders(self):
+
+        folders = self.revision_api.get_folders(self.id)
+
+        for folder in folders:
+            current_folder = Folder(folder, self.revision_api, self.change_api)
+
+            self.contents.append(current_folder)
+
+    def get_files_not_in_folder(self):
+
+        files_not_in_folder = self.revision_api.get_files_not_in_folder(self.id)
+
+        for file_not_in_folder in files_not_in_folder:
+            current_file = File(file_not_in_folder, self.revision_api, self.change_api)
+
+            self.contents.append(current_file)
+
+    def get_contents(self):
+
+        self.contents = []
+
+        self.get_folders()
+        self.get_files_not_in_folder()

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Drive Detector</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    <style>
+    .full-width{
+    width: 100%;
+    }
+    </style>
+</head>
+<p id="demo"></p>
+
+<body>
+  <!-- The drawer is always open in large screens. The header is always shown,
+  even in small screens. -->
+  <div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer
+  mdl-layout--fixed-header">
+      <header class="mdl-layout__header">
+          <div class="mdl-layout__header-row">
+          <span class="mdl-layout-title">Contributions</span>
+          <div class="mdl-layout-spacer"></div>
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable
+          mdl-textfield--floating-label mdl-textfield--align-right">
+
+              <!--<label class="mdl-button mdl-js-button mdl-button--icon"
+              for="fixed-header-drawer-exp">
+              <i class="material-icons">search</i>
+              </label>-->
+              <div class="mdl-textfield__expandable-holder">
+                  <input class="mdl-textfield__input" type="text" name="sample"
+                  id="fixed-header-drawer-exp">
+              </div>
+          </div>
+          </div>
+      </header>
+      <div class="mdl-layout__drawer">
+          <span class="mdl-layout-title">Drive Folders</span>
+          <nav class="mdl-navigation">
+              <a class="mdl-navigation__link" href="">Folder 1</a>
+              <a class="mdl-navigation__link" href="">Folder 2</a>
+              <a class="mdl-navigation__link" href="">Folder 3</a>
+              <a class="mdl-navigation__link" href="">Folder 4</a>
+          </nav>
+      </div>
+      <main class="mdl-layout__content">
+        <div class="page-content" id = "actual_content">
+          <script>
+          var user_data = {{account_data|tojson}};
+          console.log(user_data);
+          for (var i = 0; i < user_data.length; i++)
+              {
+                  var drive_contents_html = document.createElement("BUTTON");
+                  drive_contents_html.innerHTML = user_data[i].name;
+                  drive_contents_html.setAttribute("id", "Drive " + user_data[i].name);
+
+
+
+
+                  var drive_contents = user_data[i].contents;
+
+                  for (var j = 0; j < drive_contents.length; j++)
+                      {
+                          if (drive_contents[j].type === 'folder')
+                              {
+                                  var folder_contents_html = document.createElement("BUTTON");
+
+                                  folder_contents_html.innerHTML = drive_contents[j].name;
+
+                                  var folder_contents = drive_contents[j].files;
+
+                                  for (var z = 0; z < folder_contents.length; z++)
+                                      {
+                                          var file_in_folder = document.createElement("BUTTON");
+                                          file_in_folder.innerHTML = folder_contents[z].name;
+
+                                          folder_contents_html.appendChild(file_in_folder);
+                                      }
+
+                                  drive_contents_html.appendChild(folder_contents_html);
+                              }
+                          else
+                              {
+                                  var file_not_in_folder = document.createElement("BUTTON");
+                                  file_not_in_folder.innerHTML = user_data[i].contents[j].name;
+                                  drive_contents_html.appendChild(file_not_in_folder);
+                              }
+                      }
+                  document.body.appendChild(drive_contents_html);
+
+              }
+          </script>
+      </div>
+      </main>
+  </div>
+
+</body>
+
+</html>
