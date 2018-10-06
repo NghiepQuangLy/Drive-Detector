@@ -106,7 +106,7 @@ class File:
         self.timeline =          self.get_timeline()
 
     def to_json(self):
-        return {'id': self.id, 'name': self.name, 'contribution': self.contribution}
+        return {'id': self.id, 'name': self.name, 'contribution': self.contribution, 'type': 'file'}
 
     def get_revisions(self):
         """
@@ -288,7 +288,7 @@ class Folder:
         for file in self.files:
             json_files.append(file.to_json())
 
-        return {'name': self.name, 'id': self.id, 'files': json_files, 'contribution': self.contribution}
+        return {'name': self.name, 'id': self.id, 'files': json_files, 'contribution': self.contribution, 'type': 'folder'}
 
     def get_files(self):
 
@@ -338,7 +338,7 @@ class Drive:
         for content in self.contents:
             json_contents.append(content.to_json())
 
-        return {'name': self.name, 'id': self.id, 'contents': json_contents, 'contribution': self.contribution}
+        return {'name': self.name, 'id': self.id, 'contents': json_contents, 'contribution': self.contribution, 'type': 'drive'}
 
     def get_folders(self):
 
