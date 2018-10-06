@@ -1,20 +1,21 @@
 $(document).ready(function () {
-
+function create_histogram(drive_name, file_name, users, insertions, deletions, comments)
+    {
 	var ctx = $("#bar-chartcanvas");
 
 	var data = {
-		labels : ["Jack", "Manvendra", "Mike", "Tits", "Vibhas"],
+		labels : users,
 		datasets : [
 			{
 				label : "Insertions",
-				data : [10, 50, 25, 70, 40],
+				data : insertions,
                 backgroundColor : "lime",
 				
 				borderWidth : 1
 			},
 			{
 				label : "Deletions",
-				data : [20, 35, 40, 60, 50],
+				data : deletions,
 				
                 backgroundColor : "aqua",
 				
@@ -22,7 +23,7 @@ $(document).ready(function () {
 			},
             {
 				label : "Comments",
-				data : [56, 95, 11, 23, 50],
+				data : comments,
 				
                 backgroundColor : "mintcream",
 				
@@ -35,7 +36,7 @@ $(document).ready(function () {
 		title : {
 			display : true,
 			position : "top",
-			text : "Contributions Histogram",
+			text : "User Contributions for " + file_name + " in Drive " + drive_name,
 			fontSize : 18,
 			fontColor : "#111"
 		},
@@ -57,5 +58,8 @@ $(document).ready(function () {
 		data : data,
 		options : options
 	});
+    }
+// test case
+    create_histogram('Test_Drive', 'Test_File', ['Jack', 'Manvendra', 'Titos', 'Vibhass', 'Mike'], [14, 9, 32, 4, 18],[78, 39, 12, 40, 8],[50, 79, 22, 44, 88]);
 
 });
