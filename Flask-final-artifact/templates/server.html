@@ -5,26 +5,74 @@
     <meta charset="utf-8">
     <title>Drive Detector</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">   
-    <p>{{account_data}}</p>
 </head>
 <p id="demo"></p>
-<div id='buttons'></div>
-<div id="test">Test</div>
-<script>
-console.log({{account_data|tojson}})
-</script>
-<script>
 
-const list = {{account_data|tojson}}
-const length_of_list = list.length
-list.forEach(function(item,i){
-	const button = document.createElement("button")
-	const content = document.createTextNode("Item "+i)
-	button.appendChild(content)
-	document.getElementById('buttons').appendChild(button)
-})
-const list_folder = list[0].contents
-const list_file_in_folder = list_folder[0].files
-alert(list_file_in_folder[0].name);
+<body>
+<script>
+var user_data = {{account_data|tojson}};
+console.log(user_data);
+for (var i = 0; i < user_data.length; i++)
+    {
+        var drive_contents_html = document.createElement("BUTTON");
+        drive_contents_html.innerHTML = user_data[i].name;
+        drive_contents_html.setAttribute("id", "Drive " + user_data[i].name);
+        
+        
+        
+        
+        var drive_contents = user_data[i].contents;
+        
+        for (var j = 0; j < drive_contents.length; j++)
+            {
+                if (drive_contents[j].type === 'folder')
+                    {
+                        var folder_contents_html = document.createElement("BUTTON");
+                        
+                        folder_contents_html.innerHTML = drive_contents[j].name;
+                        
+                        var folder_contents = drive_contents[j].files;
+                        
+                        for (var z = 0; z < folder_contents.length; z++)
+                            {
+                                var file_in_folder = document.createElement("BUTTON");
+                                file_in_folder.innerHTML = folder_contents[z].name;
+								
+								// create dynamic variables that stores each contribution (still figuring out)
+								
+								window['d'+z] = folder_contents[z].contribution;
+								alert(d0); // doesnt alert contribution, need fix
+								
+
+								
+                                folder_contents_html.appendChild(file_in_folder);
+                            }
+                        
+                        drive_contents_html.appendChild(folder_contents_html);
+                    }
+                else
+                    {
+                        var file_not_in_folder = document.createElement("BUTTON");
+                        file_not_in_folder.innerHTML = user_data[i].contents[j].name;
+                        drive_contents_html.appendChild(file_not_in_folder);
+                    }
+            }
+        document.body.appendChild(drive_contents_html);
+
+    }
+
+//Testing dynamic variables	
+	
+for(var i=0; i<=3; i++) {
+    window['p'+i] = "hello " + i;
+}
+
+alert(p0); // hello 0
+alert(p1); // hello 1
+alert(p2); // hello 2
+alert(p3); // hello 3
+
 </script>
+</body>
+
 </html>

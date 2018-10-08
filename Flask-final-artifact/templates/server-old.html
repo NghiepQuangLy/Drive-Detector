@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Drive Detector</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">   
+    <p>{{account_data}}</p>
+</head>
+<p id="demo"></p>
+<div id='buttons'></div>
+<div id="test">Test</div>
+<script>
+console.log({{account_data|tojson}})
+</script>
+<script>
+
+const list = {{account_data|tojson}}
+const length_of_list = list.length
+list.forEach(function(item,i){
+	const button = document.createElement("button")
+	const content = document.createTextNode("Item "+i)
+	button.appendChild(content)
+	document.getElementById('buttons').appendChild(button)
+})
+const list_folder = list[0].contents
+const list_file_in_folder = list_folder[0].files
+alert(list_file_in_folder[0].name);
+</script>
+</html>
