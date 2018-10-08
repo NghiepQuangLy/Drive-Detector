@@ -1,59 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <title>Drive Detector</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">   
-</head>
-<p id="demo"></p>
-
-<body>
-<script>
-var user_data = {{account_data|tojson}};
-console.log(user_data);
-for (var i = 0; i < user_data.length; i++)
-    {
-        var drive_contents_html = document.createElement("BUTTON");
-        drive_contents_html.innerHTML = user_data[i].name;
-        drive_contents_html.setAttribute("id", "Drive " + user_data[i].name);
-        
-        
-        
-        
-        var drive_contents = user_data[i].contents;
-        
-        for (var j = 0; j < drive_contents.length; j++)
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Drive Contributions</title>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+        <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+        <style>
+        .full-width
             {
-                if (drive_contents[j].type === 'folder')
-                    {
-                        var folder_contents_html = document.createElement("BUTTON");
-                        
-                        folder_contents_html.innerHTML = drive_contents[j].name;
-                        
-                        var folder_contents = drive_contents[j].files;
-                        
-                        for (var z = 0; z < folder_contents.length; z++)
-                            {
-                                var file_in_folder = document.createElement("BUTTON");
-                                file_in_folder.innerHTML = folder_contents[z].name;
-                                
-                                folder_contents_html.appendChild(file_in_folder);
-                            }
-                        
-                        drive_contents_html.appendChild(folder_contents_html);
-                    }
-                else
-                    {
-                        var file_not_in_folder = document.createElement("BUTTON");
-                        file_not_in_folder.innerHTML = user_data[i].contents[j].name;
-                        drive_contents_html.appendChild(file_not_in_folder);
-                    }
+                width: 100%;
             }
-        document.body.appendChild(drive_contents_html);
+        </style>
+    </head>
+    <body>
+        <!-- The drawer is always open in large screens. The header is always shown,
+        even in small screens. -->
+        <div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer
+        mdl-layout--fixed-header">
+            <header class="mdl-layout__header">
+                <div class="mdl-layout__header-row">
+                    <span class="mdl-layout-title">Contributions</span>
+                    <div class="mdl-layout-spacer"></div>
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right">
+                        <div class="mdl-textfield__expandable-holder">
+                            <input class="mdl-textfield__input" type="text" name="sample" id="fixed-header-drawer-exp">
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <div class="mdl-layout__drawer" id="drive_drawer">
+                <span class="mdl-layout-title" id="current_place">User Account</span>
+                <nav class="mdl-navigation" id="button_group"></nav>
+            </div>
+            <main class="mdl-layout__content">
+                <table class="full-width mdl-data-table mdl-js-data-table mdl-data-table mdl-shadow--0dp" style="width:30%"  border = "0">
+                    <tbody id = "graph_area"></tbody>
+                </table>
+                <script>
+                    var user_data = {{account_data|tojson}};
 
-    }
-</script>
-</body>
+                    for (var i = 0; i <user_data.length; i++)
+                        {
+                            var drive_contents = user_data[i].contents;
 
+                            // creating a button for a drive
+                            var drive = document.createElement("A");
+                            drive.setAttribute("href", "");
+                            drive.className = "mdl-navigation__link";
+                            drive.innerHTML = user_data[i].name;
+                            drive.onclick = function() 
+                            {
+                                document.getElementById("current_place").innerHTML = drive.innerHTML;
+
+                                document.getElementById("button_group").innerHTML = "";
+
+                                for (var contents = 0; contents < drive_contents.length; contents++)
+                                    {
+                                        var a_file = document.createElement("A");
+                                        a_file.setAttribute("href", "");
+                                        a_file.className = "mdl-navigation__link";
+                                        a_file.innerHTML = drive_contents[contents].name;
+                                        document.getElementById("button_group").appendChild(a_file);
+                                    }
+                            }
+                            document.getElementById("button_group").appendChild(drive);
+                        }
+                </script>
+            </main>
+        </div>
+    </body>
 </html>
