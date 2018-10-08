@@ -1,0 +1,91 @@
+<html>
+<h3>
+    This button will create a contribution graph. At the moment, the two arrays for names and contributions returned by getParams is not working in this implementation, but the overall logic of the rest of it works. Look at line 76 - it should be drawChart(wantedNames, wantedVals) - both of which should be the same format as ['a','b','c'] and [1,2,3] respectively. It doesn't appear to work at the moment though for some reason, and so the hardcoded arrays are used.
+    </h3>
+ <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        
+    //files represents a list of extracted file names from the main data structure
+    files = ['file_A', 'file_B', 'file_C', 'file_D'];
+    
+    //contributions represents a list of extracted data related to each of these file names, i.e. the number of total edits made by each user
+    contributions = [['jack:2', 'yep:4', 'nah:7', 'woo:2'], ['jack:6', 'yep:1', 'nah:8', 'woo:4'], ['jack:7', 'yep:3', 'nah:4', 'woo:6'], ['jack:4', 'yep:2', 'nah:1', 'woo:7']];
+    
+      google.charts.load("current", {packages:["corechart"]});
+      google.charts.setOnLoadCallback(getParams('file_C'));
+    
+      
+      function drawChart(users, contr) {
+        var userlist = users;
+        var contrlist = contr;
+          
+        var dataList = [];
+        dataList.push(['Modifying user', 'Contributions (total)']);
+        for (var i = 0; i < userlist.length; i++)
+            {
+                dataList.push([userlist[i], contrlist[i]]);
+            }
+          
+        var data = google.visualization.arrayToDataTable(dataList);
+
+        var options = {
+          title: '% Contributions For File XX in drive XX',
+          is3D: true,
+          pieSliceText: "none"
+        };
+
+    var chart = new    google.visualization.PieChart(document.getElementById('mychart'));
+    chart.draw(data, options);
+  }
+     
+        function showChart()
+            {
+        document.getElementById('mychart').style.display='block';
+            }
+        
+        
+        //returns the 4 parameters to ideally go on as parameters in line 16
+        function getParams(clickedID)
+    {
+        driveName = 'test_drive';
+        fileName = clickedID;
+        wantedNames = [];
+        wantedVals = [];
+        wantedInfo = [];
+
+        for (var i = 0; i < files.length; i++)
+        {
+            wantedInfo.push(contributions[i]);
+        
+            if (files[i] == fileName) //get the required index of the clicked button
+            
+                {
+                    for (var j = 0; j < contributions[i].length; j++) //use it to extract the parameters into arrays that can be fed into the graphing func
+                        {
+                            wantedNames.push(contributions[i][j].split(':')[0]);
+                            wantedVals.push(contributions[i][j].split(':')[1]);
+                        }
+                
+                
+                
+                }
+
+
+        }
+        
+        drawChart(['a','b','c'], [1,2,3]) //WORKS WITH THESE HARDCODED, BUT NOT WITH WANTEDNAMES/WANTEDVALS. WantedNames should have the same format as the array of strings, and wantedVals should have the same format as the array of ints. Since drawChart(wantedNames, wantedVals) doesn't work. Something is wrong with these two arrays at th moment.
+        
+        showChart();
+        
+    }
+        
+    
+ </script>
+  
+<input id="file_C_graph" type="button" value="file_C" onclick="getParams(this.id);" >
+<div id="mychart" style="display:none;">     
+ <div id="chart_div" style="width:1100px; height: 500px;"></div>
+ 
+</div>
+
+</html>
