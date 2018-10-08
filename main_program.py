@@ -3,7 +3,7 @@ import rest_api
 import activity_api
 import file
 import json
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, jsonify, render_template, request, redirect, url_for
 app = Flask(__name__)
 
 # If modifying these scopes, delete the file token_REST.json.
@@ -39,11 +39,23 @@ def startup():
         json_account.append(team_drive.to_json())
 
 
-@app.route("/", methods=['GET'])
-def main():
+@app.route("/", methods=["GET", "POST"])
+def user_account():
     global json_account
+
+    if request.method == "POST":
+        global content_id
+        content_id = list(request.form.keys())[0]
+        return redirect(url_for('inside_drive'))
+
     return render_template("server.html", account_data=json_account)
 
+
+@app.route("/inside_drive/")
+def inside_drive():
+    return content_id
+
+content_id = 0
 if __name__ == '__main__':
     startup()
     app.run(debug=True)

@@ -8,7 +8,21 @@
         <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
         <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
         <style>
-        .full-width
+            .mdl-layout__drawer button
+            {
+                text-align: left;
+            }
+            .mdl-layout__drawer span
+            {
+                text-align: left;
+                padding-left: 0px;
+            }
+            form
+            {
+                display: flex;
+                flex-direction: column;
+            }
+            .full-width
             {
                 width: 100%;
             }
@@ -30,27 +44,30 @@
                     </div>
                 </div>
             </header>
+            
             <div class="mdl-layout__drawer" id="drive_drawer">
-                <span class="mdl-layout-title" id="current_place">User Account</span>
-                <nav class="mdl-navigation" id="button_group"></nav>
+                <span style="text-align: left;" class="mdl-layout-title" id="current_place">User Account</span>
+                <form action="" method="post" id="post_area"></form>
             </div>
+            
             <main class="mdl-layout__content">
                 <table class="full-width mdl-data-table mdl-js-data-table mdl-data-table mdl-shadow--0dp" style="width:30%"  border = "0">
                     <tbody id = "graph_area"></tbody>
                 </table>
                 <script>
-                   var user_data = {{account_data|tojson}};
+                    var user_data = {{account_data|tojson}};
 
                     for (var i = 0; i < user_data.length; i++) 
                     {
                         // creating a button for a drive
-                        var drive = document.createElement("A");
-                        drive.setAttribute("href", "");
-                        drive.className = "mdl-navigation__link";
+                        var drive = document.createElement("BUTTON");
+                        drive.className = "mdl-button mdl-js-button mdl-button--primary text-left";
                         drive.innerHTML = user_data[i].name;
                         drive.setAttribute("id", user_data[i].id);
+                        drive.setAttribute("name", user_data[i].name);
+                        drive.setAttribute("type", "submit");
                         
-                        drive.onclick = function(){document.getElementById("button_group").innerHTML = ""};
+//                        drive.onclick = function(){console.log(123)};
 //                        (function(i)
 //                         {
 //                            drive.onclick = function() 
@@ -70,7 +87,7 @@
 //                            }
 //                        })(i);
                         
-                        document.getElementById("button_group").appendChild(drive);
+                        document.getElementById("post_area").appendChild(drive);
                     }
                 </script>
             </main>
