@@ -39,34 +39,39 @@
                     <tbody id = "graph_area"></tbody>
                 </table>
                 <script>
-                    var user_data = {{account_data|tojson}};
+                   var user_data = {{account_data|tojson}};
 
-                    for (var i = 0; i <user_data.length; i++)
-                        {
-                            var drive_contents = user_data[i].contents;
-
-                            // creating a button for a drive
-                            var drive = document.createElement("A");
-                            drive.setAttribute("href", "");
-                            drive.className = "mdl-navigation__link";
-                            drive.innerHTML = user_data[i].name;
-                            drive.onclick = function() 
-                            {
-                                document.getElementById("current_place").innerHTML = drive.innerHTML;
-
-                                document.getElementById("button_group").innerHTML = "";
-
-                                for (var contents = 0; contents < drive_contents.length; contents++)
-                                    {
-                                        var a_file = document.createElement("A");
-                                        a_file.setAttribute("href", "");
-                                        a_file.className = "mdl-navigation__link";
-                                        a_file.innerHTML = drive_contents[contents].name;
-                                        document.getElementById("button_group").appendChild(a_file);
-                                    }
-                            }
-                            document.getElementById("button_group").appendChild(drive);
-                        }
+                    for (var i = 0; i < user_data.length; i++) 
+                    {
+                        // creating a button for a drive
+                        var drive = document.createElement("A");
+                        drive.setAttribute("href", "");
+                        drive.className = "mdl-navigation__link";
+                        drive.innerHTML = user_data[i].name;
+                        drive.setAttribute("id", user_data[i].id);
+                        
+                        drive.onclick = function(){document.getElementById("button_group").innerHTML = ""};
+//                        (function(i)
+//                         {
+//                            drive.onclick = function() 
+//                            {
+//                                document.getElementById("current_place").innerHTML = document.getElementById(user_data[i].id).innerHTML;
+//                        
+//                                document.getElementById("button_group").innerHTML = "";
+//
+//                                for (var content = 0; contents < user_data[i].contents.length; contents++)
+//                                    {
+//                                        var a_file = document.createElement("A");
+//                                        a_file.setAttribute("href", "");
+//                                        a_file.className = "mdl-navigation__link";
+//                                        a_file.innerHTML = user_data[i].contents[content].name;
+//                                        document.getElementById("button_group").appendChild(a_file);
+//                                    }
+//                            }
+//                        })(i);
+                        
+                        document.getElementById("button_group").appendChild(drive);
+                    }
                 </script>
             </main>
         </div>

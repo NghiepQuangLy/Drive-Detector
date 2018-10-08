@@ -12,8 +12,13 @@ SCOPES_REST = 'https://www.googleapis.com/auth/drive.readonly'
 # If modifying these scopes, delete the file token_ACTIVITY.json.
 SCOPES_ACTIVITY = 'https://www.googleapis.com/auth/activity'
 
-@app.route("/", methods=['GET'])
-def main():
+json_account = []
+
+@app.before_first_request
+def startup():
+
+    global json_account
+
     # Prints all the files in a team drive as well as their revisions
     # Prints all activities in a team drive
 
@@ -30,14 +35,15 @@ def main():
             current_drive = file.Drive(team_drive, apis['rest'], apis['activity'])
             account_contents.append(current_drive)
 
-
-    json_account = []
-
     for team_drive in account_contents:
         json_account.append(team_drive.to_json())
 
+
+@app.route("/", methods=['GET'])
+def main():
+    global json_account
     return render_template("server.html", account_data=json_account)
 
-
 if __name__ == '__main__':
+    startup()
     app.run(debug=True)
