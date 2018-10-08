@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<script type = "text/javascript">
+    //this example button has the id of file 'c' as an example for my hardcoded arrays, but this id should be allocated when creating the buttons
+    
+    //files represents a list of extracted file names from the main data structure
+    files = ['file_A', 'file_B', 'file_C', 'file_D'];
+    
+    //contributions represents a list of extracted data related to each of these file names, i.e. the number of total edits made by each user
+    contributions = [['jack:2', 'yep:4', 'nah:7', 'woo:2'], ['jack:6', 'yep:1', 'nah:8', 'woo:4'], ['jack:7', 'yep:3', 'nah:4', 'woo:6'], ['jack:4', 'yep:2', 'nah:1', 'woo:7']];
+
+    
+    //will return all 4 required parameters to feed into the graphing func, then graph it in a div and display on the webpage
+    function getParams(clickedID)
+    {
+        driveName = 'test_drive';
+        fileName = clickedID;
+        wantedNames = [];
+        wantedVals = [];
+        wantedInfo = [];
+
+        for (var i = 0; i < files.length; i++)
+        {
+            wantedInfo.push(contributions[i]);
+        
+            if (files[i] == clickedID) //get the required index of the clicked button
+            
+                {
+                    for (var j = 0; j < contributions[i].length; j++) //use it to extract the parameters into arrays that can be fed into the graphing func
+                        {
+                            wantedNames.push(contributions[i][j].split(':')[0]);
+                            wantedVals.push(contributions[i][j].split(':')[1]);
+                        }
+                
+                
+                
+                }
+
+
+        }
+        
+        //not necessary, just outputting the parameters to the page to test (though could be implemented alongside the graph)
+        document.getElementById("userParam").innerHTML = "required names for file_C: " + wantedNames;
+        document.getElementById("contrParam").innerHTML = "required total contribution counts for each user in file_C: " + wantedVals;
+        
+        //once necessary parameters have been acquired, pass them into the graphing func
+        return [driveName, fileName, wantedNames, wantedVals];
+    }
+
+</script>
+    
+</head>
+<body>
+
+<h1>First step to displaying the pie charts -> getting the parameters necessary when a button for a file is clicked (file_C in this example)</h1>
+
+    
+<h4 id = "userParam">
+
+    
+</h4>
+    
+<h4 id = "contrParam">
+
+    
+</h4>
+
+<div id = "chartDiv"> 
+    
+</div>
+
+<p>The button below will first get the parameters required for the specific button (this push), then it will use these parameters to call the graphing func and display it in a division (next push). I have made it so the parameters output to the page when you click the button, so you can see how it works.</p>
+
+<form>
+  <input id='file_C' type="button" value="file_C" onclick="getParams(this.id)">
+</form>
+
+
+
+
+
+</body>
+</html>
