@@ -23,6 +23,8 @@ list.forEach(function(item,i){
 	button.appendChild(content)
 	document.getElementById('buttons').appendChild(button)
 })
-document.getElementById("test").textContent = {{account_data|tojson}}
+const list_folder = list[0].contents
+const list_file_in_folder = list_folder[0].files
+alert(list_file_in_folder[0].name);
 </script>
 </html>
