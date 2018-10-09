@@ -43,6 +43,7 @@ commentss = [];
 names = [];
 for(var key in temp_user_data) {
   var value = temp_user_data[key];
+  output.innerHTML += value
   names.push(key)
   for(var key2 in value){
   	var value2 = value[key2]
@@ -58,5 +59,5 @@ for(var key in temp_user_data) {
     }
   }
 };
-output.innerHTML += inserts
-output.innerHTML += names
+///output.innerHTML += inserts
+//output.innerHTML += names

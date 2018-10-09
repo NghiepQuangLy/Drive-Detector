@@ -1,5 +1,11 @@
 /*
 user_data should be of the following format:
+dictionary = {
+  dictionary1,
+  dictionary2...
+}
+
+SAMPLE INPUT DATA FORMAT:
 user_data = {
   Jack: {
      create: 5,
@@ -15,84 +21,216 @@ user_data = {
 */
 
 var temp_user_data = {
-  Jack: {
-     insert: 5,
-     delete: 9,
-     comment: 2
+  Vibhas: {
+     comment: 5,
+     create: 5,
+     edit: 5,
+     emptyTrash: 5,
+     move: 5,
+     permissionChange: 5,
+     rename: 5,
+     trash: 5,
+     unknown: 5,
+     untrash: 5,
+     upload: 5
    },
-   Manvendra: {
-      insert: 4,
-      delete: 1,
-      comment:0
+  Jack: {
+    comment: 5,
+    create: 5,
+    edit: 5,
+    emptyTrash: 5,
+    move: 5,
+    permissionChange: 5,
+    rename: 5,
+    trash: 5,
+    unknown: 5,
+    untrash: 5,
+    upload: 5
+   },
+   Mike: {
+     comment: 5,
+     create: 5,
+     edit: 5,
+     emptyTrash: 5,
+     move: 5,
+     permissionChange: 5,
+     rename: 5,
+     trash: 5,
+     unknown: 5,
+     untrash: 5,
+     upload: 5
     },
     Tito: {
-       insert: 5,
-       delete: 9,
-       comment: 2
+      comment: 5,
+      create: 5,
+      edit: 5,
+      emptyTrash: 5,
+      move: 5,
+      permissionChange: 5,
+      rename: 5,
+      trash: 5,
+      unknown: 5,
+      untrash: 5,
+      upload: 5
      },
-     Vibhas: {
-        insert: 6,
-        delete: 7,
-        comment: 8
-      },
-      Mike: {
-         insert: 6,
-         delete: 7,
-         comment: 8
-       }
+   Manvendra: {
+     comment: 5,
+     create: 5,
+     edit: 5,
+     emptyTrash: 5,
+     move: 5,
+     permissionChange: 5,
+     rename: 5,
+     trash: 5,
+     unknown: 5,
+     untrash: 5,
+     upload: 5
+    }
 };
 
 $(document).ready(function () {
-//function create_histogram(drive_name, file_name, users, insertions, deletions, comments, temp_user_data)
 function create_histogram(drive_user_data)
     {
 	var ctx = $("#bar-chartcanvas");
 
-  inserts = [];
-  deletes = [];
-  commentss = [];
+  // Creating arrays to store the number of the actions performed by the user
+  // for each type of action
+  comment_count = [];
+  create_count = [];
+  edit_count = [];
+  emptyTrash_count = [];
+  move_count = [];
+  permissionChange_count = [];
+  rename_count = [];
+  trash_count = [];
+  unknown_count = [];
+  untrash_count = [];
+  upload_count = [];
+
   user_names = [];
 
+
+  // Looping through the outer dictionary items in drive_user_data
+  // With respect to the sample input data provided at the top of the file,
+  // this loop would iterate through Jack, Tito, ...
   for(var key in drive_user_data) {
+    // key would store the individual dictionary initializers inside drive_user_data
+    // for example, for the first iteration, key = "Jack"
+    // value variable below stores the dictionary objects present inside drive_user_data
     var value = drive_user_data[key];
+
+    // Storing the user names in an array
     user_names.push(key)
+
     for(var key2 in value){
     	var value2 = value[key2]
 
-      if (key2 == "insert"){
-        inserts.push(value2)
+      // If the key2 value is insert, the value corresponding to key2
+      // would be pushed into the inserts array
+      // (Similar for all the other actions)
+      if (key2 == "comment"){
+        comment_count.push(value2)
       }
-      else if (key2 == "delete"){
-        deletes.push(value2)
+      else if (key2 == "create"){
+        create_count.push(value2)
       }
-      else if (key2 == "comment"){
-        commentss.push(value2)
+      else if (key2 == "edit"){
+        edit_count.push(value2)
       }
-
+      else if (key2 == "emptyTrash"){
+        emptyTrash_count.push(value2)
+      }
+      else if (key2 == "move"){
+        move_count.push(value2)
+      }
+      else if (key2 == "permissionChange"){
+        permissionChange_count.push(value2)
+      }
+      else if (key2 == "rename"){
+        rename_count.push(value2)
+      }
+      else if (key2 == "trash"){
+        trash_count.push(value2)
+      }
+      else if (key2 == "unknown"){
+        unknown_count.push(value2)
+      }
+      else if (key2 == "untrash"){
+        untrash_count.push(value2)
+      }
+      else if (key2 == "upload"){
+        upload_count.push(value2)
+      }
     }
   };
 
 	var data = {
 		labels : user_names,
 		datasets : [
-			{
-				label : "Insertions",
-				//data : insertions,
-        data: inserts,
+      {
+				label : "Comments",
+        data: comment_count,
         backgroundColor : "lime",
 				borderWidth : 1
 			},
-			{
-				label : "Deletions",
-				//data : deletions,
-        data: deletes,
+      {
+				label : "Create",
+        data: create_count,
         backgroundColor : "aqua",
 				borderWidth : 1
 			},
-            {
-				label : "Comments",
-				data : commentss,
+      {
+				label : "Edit",
+        data: edit_count,
         backgroundColor : "mintcream",
+				borderWidth : 1
+			},
+      {
+				label : "Empty Trash",
+        data: emptyTrash_count,
+        backgroundColor : "lime",
+				borderWidth : 1
+			},
+      {
+				label : "Move",
+        data: move_count,
+        backgroundColor : "aqua",
+				borderWidth : 1
+			},
+      {
+				label : "Permission Change",
+        data: permissionChange_count,
+        backgroundColor : "mintcream",
+				borderWidth : 1
+			},
+      {
+				label : "Rename",
+        data: rename_count,
+        backgroundColor : "lime",
+				borderWidth : 1
+			},
+      {
+				label : "Trash",
+        data: trash_count,
+        backgroundColor : "aqua",
+				borderWidth : 1
+			},
+      {
+				label : "Unknown",
+        data: unknown_count,
+        backgroundColor : "mintcream",
+				borderWidth : 1
+			},
+      {
+				label : "Untrash",
+        data: untrash_count,
+        backgroundColor : "lime",
+				borderWidth : 1
+			},
+      {
+				label : "Upload",
+        data: upload_count,
+        backgroundColor : "aqua",
 				borderWidth : 1
 			}
 		]
@@ -102,8 +240,6 @@ function create_histogram(drive_user_data)
 		title : {
 			display : true,
 			position : "top",
-			//text : "User Contributions for " + file_name + " in Drive " + drive_name,
-      //text : "User Contributions for " + drive_file_data.file + " in Drive " + drive_file_data.drive,
       text : "User Contributions",
 			fontSize : 18,
 			fontColor : "#111"
@@ -128,6 +264,5 @@ function create_histogram(drive_user_data)
 	});
     }
 // test case
-    //create_histogram('Test_Drive', 'Test_File', ['Jack', 'Manvendra', 'Tito', 'Vibhas', 'Mike'], [14, 9, 32, 4, 18],[78, 39, 12, 40, 8],[50, 79, 22, 44, 88]);
     create_histogram(temp_user_data);
 });
