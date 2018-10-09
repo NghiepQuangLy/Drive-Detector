@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <script
+    type="text/javascript"
+    src="/js/lib/dummy.js"
+    
+  ></script>
+
+    <link rel="stylesheet" type="text/css" href="/css/result-light.css">
+
+      <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+  <style type="text/css">
+    
+  </style>
+  <!-- TODO: Missing CoffeeScript 2 -->
+
+  <script type="text/javascript">
+
+
+    
+  var files = ['file_A', 'file_B', 'file_C', 'file_D'];
+  var contributions = [['jack:2', 'yep:4', 'nah:7', 'woo:2'], ['jack:6', 'yep:1', 'nah:8', 'woo:4'], ['jack:7', 'yep:3', 'nah:4', 'woo:6'], ['jack:4', 'yep:2', 'nah:1', 'woo:7']];
+  
+  var createChart = function (data, fileName, driveName) {
+  var chart = new CanvasJS.Chart("chartContainer", {
+    theme: "theme3", //colour/text selection
+    title:{
+      text: "User %/Actions for " + fileName + " in Drive " + driveName
+    }, //title with parameters		
+    data: [
+      {       
+        type: "pie", //type of graph
+        showInLegend: true, //legend or no legend
+        toolTipContent: "{y} - #percent %", //value and % when hover over segment
+        legendText: "{indexLabel}", //names of users
+        dataPoints: data //data in the form of contributions : user
+      }
+    ]
+  });
+  chart.render();
+  }
+  
+  
+  var	driveName = '';
+  var  fileName = null;
+  var  wantedNames = [];
+  var  wantedVals = [];
+  var  wantedInfo = [];
+  var data = [];
+  
+  function getParams(clickedID) {
+    wantedNames = [];
+    wantedVals = [];
+    wantedInfo = [];
+    driveName = 'test_drive';
+    fileName = clickedID;
+
+    for (var i = 0; i < files.length; i++) {
+      wantedInfo.push(contributions[i]);
+      if (files[i] == clickedID) {
+        for (var j = 0; j < contributions[i].length; j++) {
+          wantedNames.push(contributions[i][j].split(':')[0]);
+          wantedVals.push(contributions[i][j].split(':')[1]);
+        }
+      }
+    }
+    create_pie_chart(driveName, fileName, wantedNames, wantedVals);
+  }
+
+
+  function create_pie_chart(drive_name, file_name, users, contributions) {
+   	driveName = drive_name; //string taken as paramater
+   	fileName = file_name; //string taken as parameter
+    usersArr = users; //array of strings taken as parameter
+    contributionsArr = contributions; //array of ints taken as parameter
+    N = usersArr.length; //length of users &/or contributions array
+  	data = [];
+
+    //filling the data array in the required format
+    for (var i = 0; i < N; i++)
+    {
+      data.push({y: contributions[i], indexLabel: users[i]});
+    }  
+      createChart(data, fileName, driveName);    
+  }
+
+
+</script>
+
+</head>
+<body>
+      <div id="chartContainer" style="height: 300px; width: 25%;"></div>  
+    <form>
+      <input id='file_A' type="button" value="file_A" onclick="getParams(this.id)">
+      <input id='file_B' type="button" value="file_B" onclick="getParams(this.id)">
+      <input id='file_C' type="button" value="file_C" onclick="getParams(this.id)">
+      <input id='file_D' type="button" value="file_D" onclick="getParams(this.id)">
+    </form>
+</body>
+</html>
