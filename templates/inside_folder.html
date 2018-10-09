@@ -58,31 +58,23 @@
                     <tbody id = "graph_area"></tbody>
                 </table>
                 <script>
-                    var drive_data = {{drive_data|tojson}};
+                    var folder_data = {{folder_data|tojson}};
                     
-                    document.getElementById("current_place").innerHTML = drive_data.name;
+                    document.getElementById("current_place").innerHTML = folder_data.name;
                     
-                    for (var i = 0; i < drive_data.contents.length; i++)
+                    for (var i = 0; i < folder_data.files.length; i++)
                         {
-                            //creating a button for files in the drive
-                            var file_in_drive = document.createElement("BUTTON");
+                            //creating a button for a file
+                            var file_in_folder = document.createElement("BUTTON");
                             
-                            file_in_drive.className = "mdl-button mdl-js-button mdl-button--primary text-left";
+                            file_in_folder.className = "mdl-button mdl-js-button mdl-button--primary text-left";
                             
-                            if (drive_data.contents[i].type === "file") 
-                                {
-                                    var symbol = "&#128441";
-                                }
-                            else
-                                {
-                                    var symbol = "&#x1F4C1";
-                                }
-                            file_in_drive.innerHTML = symbol + drive_data.contents[i].name;
-                            file_in_drive.setAttribute("id", drive_data.contents[i].id);
-                            file_in_drive.setAttribute("name", drive_data.contents[i].id);
-                            file_in_drive.setAttribute("type", "submit");
+                            file_in_folder.innerHTML = "&#128441" + folder_data.files[i].name;
+                            file_in_folder.setAttribute("id", folder_data.files[i].id);
+                            file_in_folder.setAttribute("name", folder_data.files[i].id);
+                            file_in_folder.setAttribute("type", "submit");
                             
-                            document.getElementById("post_area").appendChild(file_in_drive);
+                            document.getElementById("post_area").appendChild(file_in_folder);
                         }
                 </script>
             </main>

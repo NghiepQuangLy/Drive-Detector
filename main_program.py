@@ -14,7 +14,7 @@ SCOPES_ACTIVITY = 'https://www.googleapis.com/auth/activity'
 
 account_contents = []
 json_account = []
-content_id = 0
+content_ids = []
 
 @app.before_first_request
 def startup():
@@ -45,8 +45,8 @@ def user_account():
     global json_account
 
     if request.method == "POST":
-        global content_id
-        content_id = list(request.form.keys())[0].strip()
+        global content_ids
+        content_ids.append(list(request.form.keys())[0].strip())
         return redirect(url_for('inside_drive'))
 
     return render_template("user_account.html", account_data=json_account)
@@ -56,25 +56,26 @@ def user_account():
 def inside_drive():
 
     global account_contents
-    global content_id
+    global content_ids
 
     if request.method == "POST":
 
         type = None
 
         if list(request.form.keys())[0].strip() == "Back":
+            content_ids.pop()
             return redirect(url_for('user_account'))
+
+        content_ids.append(list(request.form.keys())[0].strip())
 
         # have to check whether a file or a folder inside the drive was clicked
         for drive in account_contents:
             for object_in_drive in drive.contents:
-                if object_in_drive.id == content_id:
+                if object_in_drive.id == content_ids[len(content_ids) - 1]:
                     type = object_in_drive.type
                     break
             if type is not None:
                 break
-
-        content_id = list(request.form.keys())[0].strip()
 
         # if a file was clicked
         if type == "file":
@@ -85,12 +86,38 @@ def inside_drive():
 
     json_drive = None
     for drive in account_contents:
-        if drive.id == content_id:
+        if drive.id == content_ids[len(content_ids) - 1]:
             json_drive = drive.to_json()
             break
 
     return render_template("inside_drive.html", drive_data=json_drive)
 
+@app.route("/inside_folder/", methods=["GET", "POST"])
+def inside_folder():
+
+    global account_contents
+    global content_ids
+
+    if request.method == "POST":
+
+        if list(request.form.keys())[0].strip() == "Back":
+            content_ids.pop()
+            return redirect(url_for('inside_drive'))
+
+        content_ids.append(list(request.form.keys())[0].strip())
+
+        return redirect(url_for('inside_file'))
+
+    json_folder = None
+    for drive in account_contents:
+        for object_in_drive in drive.contents:
+            if object_in_drive.id == content_ids[len(content_ids) - 1]:
+                json_folder = object_in_drive.to_json()
+                break
+        if json_folder is not None:
+            break
+
+    return render_template("inside_folder.html", folder_data=json_folder)
 
 if __name__ == '__main__':
     startup()
