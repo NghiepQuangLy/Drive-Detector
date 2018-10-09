@@ -182,55 +182,55 @@ function create_histogram(drive_user_data)
       {
 				label : "Edit",
         data: edit_count,
-        backgroundColor : "mintcream",
+        backgroundColor : "skyblue",
 				borderWidth : 1
 			},
       {
 				label : "Empty Trash",
         data: emptyTrash_count,
-        backgroundColor : "lime",
+        backgroundColor : "springgreen",
 				borderWidth : 1
 			},
       {
 				label : "Move",
         data: move_count,
-        backgroundColor : "aqua",
+        backgroundColor : "pink",
 				borderWidth : 1
 			},
       {
 				label : "Permission Change",
         data: permissionChange_count,
-        backgroundColor : "mintcream",
+        backgroundColor : "silver",
 				borderWidth : 1
 			},
       {
 				label : "Rename",
         data: rename_count,
-        backgroundColor : "lime",
+        backgroundColor : "salmon",
 				borderWidth : 1
 			},
       {
 				label : "Trash",
         data: trash_count,
-        backgroundColor : "aqua",
+        backgroundColor : "brown",
 				borderWidth : 1
 			},
       {
 				label : "Unknown",
         data: unknown_count,
-        backgroundColor : "mintcream",
+        backgroundColor : "gray",
 				borderWidth : 1
 			},
       {
 				label : "Untrash",
         data: untrash_count,
-        backgroundColor : "lime",
+        backgroundColor : "crimson",
 				borderWidth : 1
 			},
       {
 				label : "Upload",
         data: upload_count,
-        backgroundColor : "aqua",
+        backgroundColor : "skyblue",
 				borderWidth : 1
 			}
 		]
