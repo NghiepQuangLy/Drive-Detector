@@ -41,44 +41,57 @@ var temp_user_data = {
          comment: 8
        }
 };
-'Jack', 'Manvendra', 'Tito', 'Vibhas', 'Mike'
+
 $(document).ready(function () {
-function create_histogram(drive_name, file_name, users, insertions, deletions, comments, temp_user_data)
+//function create_histogram(drive_name, file_name, users, insertions, deletions, comments, temp_user_data)
+function create_histogram(drive_user_data)
     {
 	var ctx = $("#bar-chartcanvas");
 
-  //var drive_file_data = {
-    //drive: drive_name,
-    //file: file_name
-  //}
+  inserts = [];
+  deletes = [];
+  commentss = [];
+  user_names = [];
 
-  temp_insertions = []
-  temp_deletions = []
-  temp_comments = []
+  for(var key in drive_user_data) {
+    var value = drive_user_data[key];
+    user_names.push(key)
+    for(var key2 in value){
+    	var value2 = value[key2]
 
-  var printing_data = {
+      if (key2 == "insert"){
+        inserts.push(value2)
+      }
+      else if (key2 == "delete"){
+        deletes.push(value2)
+      }
+      else if (key2 == "comment"){
+        commentss.push(value2)
+      }
 
-  }
+    }
+  };
 
 	var data = {
-		labels : users,
+		labels : user_names,
 		datasets : [
 			{
 				label : "Insertions",
 				//data : insertions,
-        data: temp_user_data.
+        data: inserts,
         backgroundColor : "lime",
 				borderWidth : 1
 			},
 			{
 				label : "Deletions",
-				data : deletions,
+				//data : deletions,
+        data: deletes,
         backgroundColor : "aqua",
 				borderWidth : 1
 			},
             {
 				label : "Comments",
-				data : comments,
+				data : commentss,
         backgroundColor : "mintcream",
 				borderWidth : 1
 			}
@@ -90,7 +103,8 @@ function create_histogram(drive_name, file_name, users, insertions, deletions, c
 			display : true,
 			position : "top",
 			//text : "User Contributions for " + file_name + " in Drive " + drive_name,
-      text : "User Contributions for " + drive_file_data.file + " in Drive " + drive_file_data.drive,
+      //text : "User Contributions for " + drive_file_data.file + " in Drive " + drive_file_data.drive,
+      text : "User Contributions",
 			fontSize : 18,
 			fontColor : "#111"
 		},
@@ -114,6 +128,6 @@ function create_histogram(drive_name, file_name, users, insertions, deletions, c
 	});
     }
 // test case
-    create_histogram('Test_Drive', 'Test_File', ['Jack', 'Manvendra', 'Tito', 'Vibhas', 'Mike'], [14, 9, 32, 4, 18],[78, 39, 12, 40, 8],[50, 79, 22, 44, 88]);
-    //create_histogram('Test_Drive', 'Test_File', ['Jack', 'Manvendra', 'Tito', 'Vibhas', 'Mike'], [78, 39, 12, 40, 8],[50, 79, 22, 44, 88]);
+    //create_histogram('Test_Drive', 'Test_File', ['Jack', 'Manvendra', 'Tito', 'Vibhas', 'Mike'], [14, 9, 32, 4, 18],[78, 39, 12, 40, 8],[50, 79, 22, 44, 88]);
+    create_histogram(temp_user_data);
 });
