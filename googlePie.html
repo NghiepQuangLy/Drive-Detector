@@ -1,0 +1,89 @@
+<html>
+ <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        
+        //GOOGLE VISUALISATION AS OPPOSED TO CHART JS
+        //this example button has the id of file 'c' as an example for my hardcoded arrays, but this id should be allocated when creating the buttons
+    
+        //files represents a list of extracted file names from the main data structure
+        files = ['file_A', 'file_B', 'file_C', 'file_D'];
+    
+        //DATA STRUCTURE we need from the main slab of data. List of lists for both names and contribution counts, each index is corresponding to the file at the same index in files array. 
+        names = [["Jack", "Tito", "Vib", "Man", "Mike"], ["Jack", "Tito", "Vib", "Man", "Mike"], ["Jack", "Tito", "Vib", "Man", "Mike"], ["Jack", "Tito", "Vib", "Man", "Mike"]]
+        contr = [[20, 13, 24, 16, 18],[20, 18, 26, 12, 2],[2, 13, 18, 9, 10],[56, 42, 87, 33, 62]];
+        
+      google.charts.load("current", {packages:["corechart"]});
+      google.charts.setOnLoadCallback();
+      
+    //get paramters, nest the chart func inside this, so it can receive the required parameters
+      function getParams(clickedID)
+    {
+        function drawChart(driveName, fileName, users, contr) {
+          
+        
+        var drive = driveName;
+        var file = fileName;
+        var userlist = users;
+        var contrlist = contr;
+          
+        var dataList = [];
+        dataList.push(['Modifying user', 'Contributions (total)']);
+        for (var i = 0; i < userlist.length; i++)
+            {
+                dataList.push([userlist[i], contrlist[i]]);
+            }
+          
+        var data = google.visualization.arrayToDataTable(dataList);
+
+        var options = {
+          title: 'User Contributions for file '+file+' in drive '+drive,
+          is3D: true,
+          pieSliceText: "none"
+          
+                      };
+
+        var chart = new   google.visualization.PieChart(document.getElementById('mychart'));
+        chart.draw(data, options);
+          
+        document.getElementById('mychart').style.display='block';
+          
+        }
+        
+        //drive name is hardcoded because i'm not sure how to get it from the main data
+        driveName = 'test_drive';
+        fileName = clickedID;
+        wantedNames = [];
+        wantedVals = [];
+        wantedInfo = [];
+
+        for (var i = 0; i < files.length; i++)
+        {
+            if (files[i] == fileName)
+                {
+                    wantedNames = names[i];
+                    wantedVals = contr[i];
+                }
+        
+
+
+            
+        } 
+        //now draw the chart with the required parameters (how to get drive name?)
+        //drawChart(string, string, array of strings, array of ints)
+        //drawChart(driveName(need a way of getting this), fileName, names for said file, contribution counts for said file)
+        drawChart('drive_name', clickedID, wantedNames, wantedVals);
+    }
+              
+
+ </script>
+    
+<input id="file_A" type="button" value="file_A" onclick="getParams(this.id);" >
+<input id="file_B" type="button" value="file_B" onclick="getParams(this.id);" >
+<input id="file_C" type="button" value="file_C" onclick="getParams(this.id);" >
+<input id="file_D" type="button" value="file_D" onclick="getParams(this.id);" >
+<div id="mychart" style="display:none;">     
+ <div id="chart_div" style="width:900px; height: 500px;"></div>
+ 
+</div>
+
+</html>
