@@ -1,0 +1,12 @@
+account-data.json file has the simulated data for FIT2101 drive.
+
+Replace in main_program.py all data retrieving:
+
+    with open("./account-data.json") as f:
+        json_account = json.load(f)
+    print(type(json_account))
+    print(len(json_account))
+
+have the created account-data.json file within artifact folder
+
+refer account_data to json_account (account-data.json)
