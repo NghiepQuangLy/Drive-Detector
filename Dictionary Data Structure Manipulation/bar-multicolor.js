@@ -245,7 +245,7 @@ function create_histogram(drive_user_data)
 			fontColor : "#111"
 		},
 		legend : {
-			display : false
+			display : true
 		},
 		scales : {
 			 xAxes: [{
