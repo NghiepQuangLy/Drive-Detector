@@ -3,7 +3,7 @@ var user_data = {{account_data|tojson}};
 console.log(user_data);
 for (var i = 0; i < user_data.length; i++)
     {
-        var drive_contents_html = document.createElement("BUTTON");
+        var drive_contents_html = outputAreaRef.createElement("BUTTON");
         drive_contents_html.innerHTML = user_data[i].name;
         drive_contents_html.setAttribute("id", "Drive " + user_data[i].name);
 
@@ -16,7 +16,7 @@ for (var i = 0; i < user_data.length; i++)
             {
                 if (drive_contents[j].type === 'folder')
                     {
-                        var folder_contents_html = document.createElement("BUTTON");
+                        var folder_contents_html = outputAreaRef.createElement("BUTTON");
 
                         folder_contents_html.innerHTML = drive_contents[j].name;
 
