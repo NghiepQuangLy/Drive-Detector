@@ -52,13 +52,16 @@
                 <span style="text-align: left;" class="mdl-layout-title" id="current_place"></span>
                 <form action="" method="post" id="post_area"></form>
             </div>
-            
+            <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
             <main class="mdl-layout__content">
                 <table class="full-width mdl-data-table mdl-js-data-table mdl-data-table mdl-shadow--0dp" style="width:30%"  border = "0">
-                    <tbody id = "graph_area"></tbody>
+                    <tbody id = "graph_area">
+                        <div id="chartContainer" style="height: 100%; width: 100%;"></div>
+                    </tbody>
                 </table>
                 <script>
                     var drive_data = {{drive_data|tojson}};
+                    var drive_name = drive_data.name;
                     
                     document.getElementById("current_place").innerHTML = drive_data.name;
                     
@@ -83,6 +86,49 @@
                             file_in_drive.setAttribute("type", "submit");
                             
                             document.getElementById("post_area").appendChild(file_in_drive);
+                        }
+                    
+                    var contributors = [];
+                    var contribution = [];
+                    
+                    for (var user in drive_data.contribution)
+                        {
+                            contributors.push(user);
+                            contribution.push(drive_data.contribution[user]);
+                        }
+                    
+                    create_pie_chart(drive_name, contributors, contribution);
+                    
+                    function createChart(data, file_name) 
+                        {
+                            var chart = new CanvasJS.Chart("chartContainer", 
+                                                            {
+                                                                theme: "theme3", //colour/text selection
+                                                                title:
+                                                                        {
+                                                                            text: "User Actions for " + file_name
+                                                                        }, //title with parameters		
+                                                                data: 
+                                                                        [{       
+                                                                            type: "pie", //type of graph
+                                                                            showInLegend: true, //legend or no legend
+                                                                            toolTipContent: "{y} - #percent %", //value and % when hover over segment
+                                                                            legendText: "{indexLabel}", //names of users
+                                                                            dataPoints: data //data in the form of contributions : user
+                                                                        }]
+                                                            });
+                            chart.render();
+                        }
+                    function create_pie_chart(file_name, users, contributions) 
+                        {
+                            var data = [];
+
+                            //filling the data array in the required format
+                            for (var i = 0; i < users.length; i++)
+                            {
+                              data.push({y: contributions[i], indexLabel: users[i]});
+                            }  
+                              createChart(data, file_name);    
                         }
                 </script>
             </main>

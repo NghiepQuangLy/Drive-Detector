@@ -332,7 +332,7 @@ class Drive:
         self.get_contents()
 
         self.contribution =     {}
-        #self.calculate_contribution_all_files()
+        self.calculate_contribution_all_files()
 
     def to_json(self):
 
@@ -367,3 +367,20 @@ class Drive:
 
         self.get_folders()
         self.get_files_not_in_folder()
+
+    def calculate_contribution_a_file(self, file):
+        for user in file.contribution:
+            number_of_actions = file.contribution[user]
+            while number_of_actions > 0:
+                try:
+                    self.contribution[user] = self.contribution[user] + 1
+                except KeyError:
+                    self.contribution[user] = 1
+                number_of_actions -= 1
+
+    def calculate_contribution_all_files(self):
+        if self.contents:
+            self.contribution = {}
+
+            for file in self.contents:
+                self.calculate_contribution_a_file(file)
