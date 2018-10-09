@@ -119,6 +119,44 @@ def inside_folder():
 
     return render_template("inside_folder.html", folder_data=json_folder)
 
+@app.route("/inside_file", methods=["GET", "POST"])
+def inside_file():
+
+    global account_contents
+    global content_ids
+
+    if request.method == "POST":
+
+        if list(request.form.keys())[0].strip() == "Back":
+            content_ids.pop()
+            parent = content_ids[len(content_ids) - 1]
+
+            for drive in account_contents:
+                if drive.id == parent:
+                    return redirect(url_for('inside_drive'))
+                else:
+                    for object_in_drive in drive.contents:
+                        if object_in_drive.id == parent:
+                            if object_in_drive.type == "folder":
+                                return redirect(url_for('inside_folder'))
+    else:
+        file_json = None
+        for drive in account_contents:
+            for object_in_drive in drive.contents:
+                if object_in_drive.type == "folder":
+                    for files in object_in_drive.files:
+                        if files.id == content_ids[len(content_ids) - 1]:
+                            file_json = files.to_json()
+                            break
+                elif object_in_drive.type == "file":
+                    if object_in_drive.id == content_ids[len(content_ids) - 1]:
+                        file_json = object_in_drive.to_json()
+                        break
+            if file_json is not None:
+                break
+
+        return render_template("inside_file.html", file_data=file_json)
+
 if __name__ == '__main__':
     startup()
     app.run(debug=True)

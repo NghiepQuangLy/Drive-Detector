@@ -60,37 +60,19 @@
                     </tbody>
                 </table>
                 <script>
-                    var folder_data = {{folder_data|tojson}};
-                    var folder_name = folder_data.name;
-                    
-                    document.getElementById("current_place").innerHTML = folder_data.name;
-                    
-                    for (var i = 0; i < folder_data.files.length; i++)
-                        {
-                            //creating a button for a file
-                            var file_in_folder = document.createElement("BUTTON");
-                            
-                            file_in_folder.className = "mdl-button mdl-js-button mdl-button--primary text-left";
-                            
-                            file_in_folder.innerHTML = "&#128441" + folder_data.files[i].name;
-                            file_in_folder.setAttribute("id", folder_data.files[i].id);
-                            file_in_folder.setAttribute("name", folder_data.files[i].id);
-                            file_in_folder.setAttribute("type", "submit");
-                            
-                            document.getElementById("post_area").appendChild(file_in_folder);
-                        }
-                    
+                    var file_data = {{file_data|tojson}};
+                    var file_name = file_data.name;
                     
                     var contributors = [];
                     var contribution = [];
                     
-                    for (var user in folder_data.contribution)
+                    for (var user in file_data.contribution)
                         {
                             contributors.push(user);
-                            contribution.push(folder_data.contribution[user]);
+                            contribution.push(file_data.contribution[user]);
                         }
                     
-                    create_pie_chart(folder_name, contributors, contribution);
+                    create_pie_chart(file_name, contributors, contribution);
                     
                     function createChart(data, file_name) 
                         {
