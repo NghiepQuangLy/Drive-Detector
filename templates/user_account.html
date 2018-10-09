@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Drive Detector</title>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+        <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+        <style>
+            .mdl-layout__drawer button
+            {
+                text-align: left;
+            }
+            .mdl-layout__drawer span
+            {
+                text-align: left;
+                padding-left: 0px;
+            }
+            form
+            {
+                display: flex;
+                flex-direction: column;
+            }
+            .full-width
+            {
+                width: 100%;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- The drawer is always open in large screens. The header is always shown,
+        even in small screens. -->
+        <div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer
+        mdl-layout--fixed-header">
+            <header class="mdl-layout__header">
+                <div class="mdl-layout__header-row">
+                    <span class="mdl-layout-title">Contributions</span>
+                    <div class="mdl-layout-spacer"></div>
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right">
+                        <div class="mdl-textfield__expandable-holder">
+                            <input class="mdl-textfield__input" type="text" name="sample" id="fixed-header-drawer-exp">
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="mdl-layout__drawer" id="drive_drawer">
+                <span style="text-align: left;" class="mdl-layout-title" id="current_place">User Account</span>
+                <form action="" method="post" id="post_area"></form>
+            </div>
+            
+            <main class="mdl-layout__content">
+                <table class="full-width mdl-data-table mdl-js-data-table mdl-data-table mdl-shadow--0dp" style="width:30%"  border = "0">
+                    <tbody id = "graph_area"></tbody>
+                </table>
+                <script>
+                    var user_data = {{account_data|tojson}};
+
+                    for (var i = 0; i < user_data.length; i++) 
+                    {
+                        // creating a button for a drive
+                        var drive = document.createElement("BUTTON");
+                        
+                        drive.className = "mdl-button mdl-js-button mdl-button--primary text-left";
+                        drive.innerHTML = user_data[i].name;
+                        drive.setAttribute("id", user_data[i].id);
+                        drive.setAttribute("name", user_data[i].id);
+                        drive.setAttribute("type", "submit");
+                        
+                        document.getElementById("post_area").appendChild(drive);
+                    }
+                </script>
+            </main>
+        </div>
+    </body>
+</html>

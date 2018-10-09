@@ -90,6 +90,7 @@ class File:
         self.id =                google_api_file_data['id']
         self.name =              google_api_file_data['name']
         self.trashed =           google_api_file_data['trashed']
+        self.type =              "file"
         self.canReadRevisions =  google_api_file_data['capabilities']['canReadRevisions']
         self.revision_api =      revision_api
         self.change_api =        change_api
@@ -106,7 +107,7 @@ class File:
         self.timeline =          self.get_timeline()
 
     def to_json(self):
-        return {'id': self.id, 'name': self.name, 'contribution': self.contribution, 'type': 'file'}
+        return {'id': self.id, 'name': self.name, 'contribution': self.contribution, 'type': self.type}
 
     def get_revisions(self):
         """
@@ -272,6 +273,7 @@ class Folder:
     def __init__(self, google_api_folder_data, revision_api, change_api):
         self.name =             google_api_folder_data['name']
         self.id =               google_api_folder_data['id']
+        self.type =             "folder"
         self.revision_api =     revision_api
         self.change_api =       change_api
 
@@ -288,7 +290,7 @@ class Folder:
         for file in self.files:
             json_files.append(file.to_json())
 
-        return {'name': self.name, 'id': self.id, 'files': json_files, 'contribution': self.contribution, 'type': 'folder'}
+        return {'name': self.name, 'id': self.id, 'files': json_files, 'contribution': self.contribution, 'type': self.type}
 
     def get_files(self):
 
@@ -322,6 +324,7 @@ class Drive:
     def __init__(self, google_api_drive_data, revision_api, change_api):
         self.name =             google_api_drive_data['name']
         self.id =               google_api_drive_data['id']
+        self.type =             "drive"
         self.revision_api =     revision_api
         self.change_api =       change_api
 
@@ -338,7 +341,7 @@ class Drive:
         for content in self.contents:
             json_contents.append(content.to_json())
 
-        return {'name': self.name, 'id': self.id, 'contents': json_contents, 'contribution': self.contribution, 'type': 'drive'}
+        return {'name': self.name, 'id': self.id, 'contents': json_contents, 'contribution': self.contribution, 'type': self.type}
 
     def get_folders(self):
 
