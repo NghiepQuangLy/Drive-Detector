@@ -15,7 +15,7 @@
 import mpld3
 import matplotlib.pyplot as plt
 import numpy as np
-#def histogram(users):
+def create_histogram(users):
 #name of file
 fileName = 'File1'
 

@@ -60,6 +60,6 @@ function create_histogram(drive_name, file_name, users, insertions, deletions, c
 	});
     }
 // test case
-    create_histogram('Test_Drive', 'Test_File', ['Jack', 'Manvendra', 'Titos', 'Vibhass', 'Mike'], [14, 9, 32, 4, 18],[78, 39, 12, 40, 8],[50, 79, 22, 44, 88]);
+    create_histogram('Test_Drive', 'Test_File', ['Jack', 'Manvendra', 'Tito', 'Vibhas', 'Mike'], [14, 9, 32, 4, 18],[78, 39, 12, 40, 8],[50, 79, 22, 44, 88]);
 
 });
