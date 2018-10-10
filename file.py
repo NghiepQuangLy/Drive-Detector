@@ -103,11 +103,12 @@ class File:
         self.revisions =         self.get_revisions()
         self.changes =           self.get_changes()
 
+        self.histogram =         self.get_histogram()
         self.contribution =      self.get_contribution()
         self.timeline =          self.get_timeline()
 
     def to_json(self):
-        return {'id': self.id, 'name': self.name, 'contribution': self.contribution, 'type': self.type}
+        return {'id': self.id, 'name': self.name, 'contribution': self.contribution, 'type': self.type, 'histogram': self.histogram}
 
     def get_revisions(self):
         """
@@ -146,6 +147,27 @@ class File:
             results_change.append(self.Change(change))
 
         return results_change
+
+    def get_histogram(self):
+        """
+        Gets the type of the contribution in the file and their amount in the file
+
+        :return: a dictionary containing the contributors as keys and the data is another dictionary where the keys corresponds to the
+                 type of actions and the data is how many actions of that type occurred towards the file
+        """
+
+        results_histogram = {}
+
+        for change in self.changes:
+            if change.user is not None:
+                try:
+                    results_histogram[change.user][change.type] = results_histogram[change.user][change.type] + 1
+                except KeyError:
+                    results_histogram[change.user] = {'comment': 0, 'create': 0, 'edit': 0, 'emptyTrash': 0, 'move': 0, 'permissionChange': 0,
+                                                     'rename': 0, 'trash': 0, 'unknown': 0, 'untrash': 0, 'upload': 0}
+                    results_histogram[change.user][change.type] = 1
+
+        return results_histogram
 
     def get_contribution(self):
         """
@@ -280,6 +302,9 @@ class Folder:
         self.files = []
         self.get_files()
 
+        self.histogram = {}
+        self.get_histogram()
+
         self.contribution = {}
         self.calculate_contribution_all_files()
 
@@ -290,7 +315,7 @@ class Folder:
         for file in self.files:
             json_files.append(file.to_json())
 
-        return {'name': self.name, 'id': self.id, 'files': json_files, 'contribution': self.contribution, 'type': self.type}
+        return {'name': self.name, 'id': self.id, 'files': json_files, 'contribution': self.contribution, 'type': self.type, 'histogram': self.histogram}
 
     def get_files(self):
 
@@ -302,6 +327,38 @@ class Folder:
             current_file = File(file, self.revision_api, self.change_api)
 
             self.files.append(current_file)
+
+    def get_histogram_a_file(self, file):
+        """
+        Gets the type of the contribution of a folder/file in the folder and their amount in the folder/file
+
+        :return: a dictionary containing the contributors as keys and the data is another dictionary where the keys corresponds to the
+                 type of actions and the data is how many actions of that type occurred towards the folder/file
+        """
+        for user in file.histogram:
+            for change_type in file.histogram[user]:
+                number_of_actions = file.histogram[user][change_type]
+                while number_of_actions > 0:
+                    try:
+                        self.histogram[user][change_type] = self.histogram[user][change_type] + 1
+                    except KeyError:
+                        self.histogram[user] = {'comment': 0, 'create': 0, 'edit': 0, 'emptyTrash': 0, 'move': 0, 'permissionChange': 0,
+                                                'rename': 0, 'trash': 0, 'unknown': 0, 'untrash': 0, 'upload': 0}
+                        self.histogram[user][change_type] = 1
+                    number_of_actions -= 1
+
+    def get_histogram(self):
+        """
+        Gets the type of the contribution of all folders/files in the folder and their amount in the folders/files
+
+        :return: a dictionary containing the contributors as keys and the data is another dictionary where the keys corresponds to the
+                 type of actions and the data is how many actions of that type occurred towards the folders/files
+        """
+        if self.files:
+            self.histogram = {}
+
+            for file in self.files:
+                self.get_histogram_a_file(file)
 
     def calculate_contribution_a_file(self, file):
         for user in file.contribution:
@@ -331,7 +388,10 @@ class Drive:
         self.contents = []
         self.get_contents()
 
-        self.contribution =     {}
+        self.histogram = {}
+        self.get_histogram()
+
+        self.contribution = {}
         self.calculate_contribution_all_files()
 
     def to_json(self):
@@ -341,7 +401,7 @@ class Drive:
         for content in self.contents:
             json_contents.append(content.to_json())
 
-        return {'name': self.name, 'id': self.id, 'contents': json_contents, 'contribution': self.contribution, 'type': self.type}
+        return {'name': self.name, 'id': self.id, 'contents': json_contents, 'contribution': self.contribution, 'type': self.type, 'histogram': self.histogram}
 
     def get_folders(self):
 
@@ -367,6 +427,39 @@ class Drive:
 
         self.get_folders()
         self.get_files_not_in_folder()
+
+
+    def get_histogram_a_file(self, file):
+        """
+        Gets the type of the contribution of a folder/file in the drive and their amount in the folder/file
+
+        :return: a dictionary containing the contributors as keys and the data is another dictionary where the keys corresponds to the
+                 type of actions and the data is how many actions of that type occurred towards the folder/file
+        """
+        for user in file.histogram:
+            for change_type in file.histogram[user]:
+                number_of_actions = file.histogram[user][change_type]
+                while number_of_actions > 0:
+                    try:
+                        self.histogram[user][change_type] = self.histogram[user][change_type] + 1
+                    except KeyError:
+                        self.histogram[user] = {'comment': 0, 'create': 0, 'edit': 0, 'emptyTrash': 0, 'move': 0, 'permissionChange': 0,
+                                                'rename': 0, 'trash': 0, 'unknown': 0, 'untrash': 0, 'upload': 0}
+                        self.histogram[user][change_type] = 1
+                    number_of_actions -= 1
+
+    def get_histogram(self):
+        """
+        Gets the type of the contribution of all folders/files in the drive and their amount in the folders/files
+
+        :return: a dictionary containing the contributors as keys and the data is another dictionary where the keys corresponds to the
+                 type of actions and the data is how many actions of that type occurred towards the folders/files
+        """
+        if self.contents:
+            self.histogram = {}
+
+            for file in self.contents:
+                self.get_histogram_a_file(file)
 
     def calculate_contribution_a_file(self, file):
         for user in file.contribution:

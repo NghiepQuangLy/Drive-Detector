@@ -53,15 +53,18 @@
                 <form action="" method="post" id="post_area"></form>
             </div>
             <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
             <main class="mdl-layout__content">
-                <table class="full-width mdl-data-table mdl-js-data-table mdl-data-table mdl-shadow--0dp" style="width:30%"  border = "0">
-                    <tbody id = "graph_area">
-                        <div id="chartContainer" style="height: 100%; width: 100%;"></div>
+                <table class="full-width mdl-data-table mdl-js-data-table mdl-data-table mdl-shadow--0dp" style="width:30%; postion: absolute"  border = "0">
+                    <tbody>
+                            <div id="user_contribution_pie_chart" style="height: 100%; width: 100%;"></div>
                     </tbody>
                 </table>
+                <canvas id="histogram" style="position: relative;"></canvas>
                 <script>
                     var drive_data = {{drive_data|tojson}};
                     var drive_name = drive_data.name;
+                    var drive_histogram = drive_data.histogram;
                     
                     document.getElementById("current_place").innerHTML = drive_data.name;
                     
@@ -98,10 +101,11 @@
                         }
                     
                     create_pie_chart(drive_name, contributors, contribution);
+                    create_histogram(drive_histogram);
                     
                     function createChart(data, file_name) 
                         {
-                            var chart = new CanvasJS.Chart("chartContainer", 
+                            var chart = new CanvasJS.Chart("user_contribution_pie_chart", 
                                                             {
                                                                 theme: "theme3", //colour/text selection
                                                                 title:
@@ -119,6 +123,7 @@
                                                             });
                             chart.render();
                         }
+                    
                     function create_pie_chart(file_name, users, contributions) 
                         {
                             var data = [];
@@ -129,6 +134,199 @@
                               data.push({y: contributions[i], indexLabel: users[i]});
                             }  
                               createChart(data, file_name);    
+                        }
+                    
+                    function create_histogram(drive_user_data)
+                        {
+                            // Creating arrays to store the number of the actions performed by the user
+                            // for each type of action
+                            comment_count = [];
+                            create_count = [];
+                            edit_count = [];
+                            emptyTrash_count = [];
+                            move_count = [];
+                            permissionChange_count = [];
+                            rename_count = [];
+                            trash_count = [];
+                            unknown_count = [];
+                            untrash_count = [];
+                            upload_count = [];
+
+                            user_names = [];
+
+
+                            // Looping through the outer dictionary items in drive_user_data
+                            // With respect to the sample input data provided at the top of the file,
+                            // this loop would iterate through Jack, Tito, ...
+                            for(var key in drive_user_data) 
+                                {
+                                    // key would store the individual dictionary initializers inside drive_user_data
+                                    // for example, for the first iteration, key = "Jack"
+                                    // value variable below stores the dictionary objects present inside drive_user_data
+                                    var value = drive_user_data[key];
+
+                                    // Storing the user names in an array
+                                    user_names.push(key)
+
+                                    for(var key2 in value)
+                                        {
+                                            var value2 = value[key2]
+
+                                            // If the key2 value is insert, the value corresponding to key2
+                                            // would be pushed into the inserts array
+                                            // (Similar for all the other actions)
+                                            if (key2 == "comment")
+                                                {
+                                                    comment_count.push(value2)
+                                                }
+                                            else if (key2 == "create")
+                                                {
+                                                    create_count.push(value2)
+                                                }
+                                            else if (key2 == "edit")
+                                                {
+                                                    edit_count.push(value2)
+                                                }
+                                            else if (key2 == "emptyTrash")
+                                                {
+                                                    emptyTrash_count.push(value2)
+                                                }
+                                            else if (key2 == "move")
+                                                {
+                                                    move_count.push(value2)
+                                                }
+                                            else if (key2 == "permissionChange")
+                                                {
+                                                    permissionChange_count.push(value2)
+                                                }
+                                            else if (key2 == "rename")
+                                                {
+                                                    rename_count.push(value2)
+                                                }
+                                            else if (key2 == "trash") 
+                                                {
+                                                    trash_count.push(value2)
+                                                }
+                                            else if (key2 == "unknown")
+                                                {
+                                                    unknown_count.push(value2)
+                                                }
+                                            else if (key2 == "untrash")
+                                                {
+                                                    untrash_count.push(value2)
+                                                }
+                                            else if (key2 == "upload")
+                                                {
+                                                    upload_count.push(value2)
+                                                }
+                                        }
+                                  }
+
+                            var data = {
+                                labels : user_names,
+                                datasets : [
+                                            {
+                                                label : "Comments",
+                                                data: comment_count,
+                                                backgroundColor : "lime",
+                                                borderWidth : 1
+                                            },
+                                            {
+                                                label : "Create",
+                                                data: create_count,
+                                                backgroundColor : "aqua",
+                                                borderWidth : 1
+                                            },
+                                            {
+                                                label : "Edit",
+                                                data: edit_count,
+                                                backgroundColor : "skyblue",
+                                                borderWidth : 1
+                                            },
+                                            {
+                                                label : "Empty Trash",
+                                                data: emptyTrash_count,
+                                                backgroundColor : "springgreen",
+                                                borderWidth : 1
+                                            },
+                                            {
+                                                label : "Move",
+                                                data: move_count,
+                                                backgroundColor : "pink",
+                                                borderWidth : 1
+                                            },
+                                            {
+                                                label : "Permission Change",
+                                                data: permissionChange_count,
+                                                backgroundColor : "silver",
+                                                borderWidth : 1
+                                            },
+                                            {
+                                                label : "Rename",
+                                                data: rename_count,
+                                                backgroundColor : "salmon",
+                                                borderWidth : 1
+                                            },
+                                            {
+                                                label : "Trash",
+                                                data: trash_count,
+                                                backgroundColor : "brown",
+                                                borderWidth : 1
+                                            },
+                                            {
+                                                label : "Unknown",
+                                                data: unknown_count,
+                                                backgroundColor : "gray",
+                                                borderWidth : 1
+                                            },
+                                            {
+                                                label : "Untrash",
+                                                data: untrash_count,
+                                                backgroundColor : "crimson",
+                                                borderWidth : 1
+                                            },
+                                            {
+                                                label : "Upload",
+                                                data: upload_count,
+                                                backgroundColor : "skyblue",
+                                                borderWidth : 1
+                                            }
+                                        ]
+                                    };
+
+                            var options = {
+                                            title : 
+                                                    {
+                                                        display : true,
+                                                        position : "top",
+                                                        text : "User Contributions",
+                                                        fontSize : 18,
+                                                        fontColor : "#111"
+                                                    },
+                                            legend : 
+                                                    {
+                                                        display : true
+                                                    },
+                                            scales : 
+                                                    {
+                                                        xAxes: [
+                                                                    {
+                                                                        stacked: true
+                                                                    }
+                                                               ],
+                                                        yAxes: [
+                                                                    {
+                                                                        stacked: true
+                                                                    }
+                                                               ]
+                                                    }
+                                        };
+
+                            var chart = new Chart("histogram", {
+                                                            type : "horizontalBar",
+                                                            data : data,
+                                                            options : options
+                                                        });
                         }
                 </script>
             </main>
