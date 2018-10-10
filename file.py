@@ -70,7 +70,7 @@ class File:
 
             self.user =              event.get('user', None)
             if self.user is None:
-                self.user =          ''
+                self.user =          'Unknown'
             else:
                 self.user =          self.user['name']
 
