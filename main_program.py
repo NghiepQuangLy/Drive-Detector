@@ -84,7 +84,7 @@ def inside_drive_pie():
             return redirect(url_for('inside_file'))
         # if a folder was clicked
         elif type == "folder":
-            return redirect(url_for('inside_folder'))
+            return redirect(url_for('inside_folder_pie'))
 
     json_drive = None
     for drive in account_contents:
@@ -126,7 +126,7 @@ def inside_drive_histogram():
             return redirect(url_for('inside_file'))
         # if a folder was clicked
         elif type == "folder":
-            return redirect(url_for('inside_folder'))
+            return redirect(url_for('inside_folder_pie'))
 
     json_drive = None
     for drive in account_contents:
@@ -136,8 +136,8 @@ def inside_drive_histogram():
 
     return render_template("inside_drive_histogram.html", drive_data=json_drive)
 
-@app.route("/inside_folder/", methods=["GET", "POST"])
-def inside_folder():
+@app.route("/inside_folder_pie/", methods=["GET", "POST"])
+def inside_folder_pie():
 
     global account_contents
     global content_ids
@@ -147,6 +147,8 @@ def inside_folder():
         if list(request.form.keys())[0].strip() == "Back":
             content_ids.pop()
             return redirect(url_for('inside_drive_pie'))
+        elif list(request.form.keys())[0].strip() == "Histogram":
+            return redirect(url_for('inside_folder_histogram'))
 
         content_ids.append(list(request.form.keys())[0].strip())
 
@@ -161,7 +163,36 @@ def inside_folder():
         if json_folder is not None:
             break
 
-    return render_template("inside_folder.html", folder_data=json_folder)
+    return render_template("inside_folder_pie.html", folder_data=json_folder)
+
+@app.route("/inside_folder_histogram/", methods=["GET", "POST"])
+def inside_folder_histogram():
+
+    global account_contents
+    global content_ids
+
+    if request.method == "POST":
+
+        if list(request.form.keys())[0].strip() == "Back":
+            content_ids.pop()
+            return redirect(url_for('inside_drive_pie'))
+        elif list(request.form.keys())[0].strip() == "Pie":
+            return redirect(url_for('inside_folder_pie'))
+
+        content_ids.append(list(request.form.keys())[0].strip())
+
+        return redirect(url_for('inside_file'))
+
+    json_folder = None
+    for drive in account_contents:
+        for object_in_drive in drive.contents:
+            if object_in_drive.id == content_ids[len(content_ids) - 1]:
+                json_folder = object_in_drive.to_json()
+                break
+        if json_folder is not None:
+            break
+
+    return render_template("inside_folder_histogram.html", folder_data=json_folder)
 
 @app.route("/inside_file", methods=["GET", "POST"])
 def inside_file():
@@ -182,7 +213,7 @@ def inside_file():
                     for object_in_drive in drive.contents:
                         if object_in_drive.id == parent:
                             if object_in_drive.type == "folder":
-                                return redirect(url_for('inside_folder'))
+                                return redirect(url_for('inside_folder_pie'))
     else:
         file_json = None
         for drive in account_contents:

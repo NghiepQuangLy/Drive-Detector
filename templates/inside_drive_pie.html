@@ -60,13 +60,12 @@
                         <form action="" method="post">
                             <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" style="height:63px;" name="Histogram" type="submit">Histogram</button>
                         </form>
-                            <div id="user_contribution_pie_chart" style="height: 100%; width: 100%;"></div>
+                        <div id="user_contribution_pie_chart" style="height: 100%; width: 100%;"></div>
                     </tbody>
                 </table>
                 <script>
                     var drive_data = {{drive_data|tojson}};
                     var drive_name = drive_data.name;
-                    var drive_histogram = drive_data.histogram;
                     
                     document.getElementById("current_place").innerHTML = drive_data.name;
                     

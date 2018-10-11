@@ -56,7 +56,10 @@
             <main class="mdl-layout__content">
                 <table class="full-width mdl-data-table mdl-js-data-table mdl-data-table mdl-shadow--0dp" style="width:30%"  border = "0">
                     <tbody id = "graph_area">
-                        <div id="chartContainer" style="height: 100%; width: 100%;"></div>
+                        <form action="" method="post">
+                            <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" style="height:63px;" name="Histogram" type="submit">Histogram</button>
+                        </form>
+                        <div id="user_contribution_pie_chart" style="height: 100%; width: 100%;"></div>
                     </tbody>
                 </table>
                 <script>
@@ -93,7 +96,7 @@
                     
                     function createChart(data, file_name) 
                         {
-                            var chart = new CanvasJS.Chart("chartContainer", 
+                            var chart = new CanvasJS.Chart("user_contribution_pie_chart", 
                                                             {
                                                                 theme: "theme3", //colour/text selection
                                                                 title:
