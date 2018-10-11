@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Drive Detector</title>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+        <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+        <style>
+            .mdl-layout__drawer button
+            {
+                text-align: left;
+            }
+            .mdl-layout__drawer span
+            {
+                text-align: left;
+                padding-left: 0px;
+            }
+            form
+            {
+                display: flex;
+                flex-direction: column;
+            }
+            .full-width
+            {
+                width: 100%;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- The drawer is always open in large screens. The header is always shown,
+        even in small screens. -->
+        <div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer
+        mdl-layout--fixed-header">
+            <header class="mdl-layout__header">
+                <div class="mdl-layout__header-row">
+                    <span class="mdl-layout-title">Contributions</span>
+                    <div class="mdl-layout-spacer"></div>
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right">
+                        <div class="mdl-textfield__expandable-holder">
+                            <input class="mdl-textfield__input" type="text" name="sample" id="fixed-header-drawer-exp">
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="mdl-layout__drawer" id="drive_drawer">
+                <form action="" method="post">
+                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" style="height:63px;" name="Back" type="submit">Back</button>
+                </form>
+                <span style="text-align: left;" class="mdl-layout-title" id="current_place"></span>
+                <form action="" method="post" id="post_area"></form>
+            </div>
+            <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+            <main class="mdl-layout__content">
+                <table class="full-width mdl-data-table mdl-js-data-table mdl-data-table mdl-shadow--0dp" style="width:30%; postion: absolute"  border = "0">
+                    <tbody>
+                        <form action="" method="post">
+                            <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" style="height:63px;" name="Histogram" type="submit">Histogram</button>
+                        </form>
+                            <div id="user_contribution_pie_chart" style="height: 100%; width: 100%;"></div>
+                    </tbody>
+                </table>
+                <script>
+                    var drive_data = {{drive_data|tojson}};
+                    var drive_name = drive_data.name;
+                    var drive_histogram = drive_data.histogram;
+                    
+                    document.getElementById("current_place").innerHTML = drive_data.name;
+                    
+                    for (var i = 0; i < drive_data.contents.length; i++)
+                        {
+                            //creating a button for files in the drive
+                            var file_in_drive = document.createElement("BUTTON");
+                            
+                            file_in_drive.className = "mdl-button mdl-js-button mdl-button--primary text-left";
+                            
+                            if (drive_data.contents[i].type === "file") 
+                                {
+                                    var symbol = "&#128441";
+                                }
+                            else
+                                {
+                                    var symbol = "&#x1F4C1";
+                                }
+                            file_in_drive.innerHTML = symbol + drive_data.contents[i].name;
+                            file_in_drive.setAttribute("id", drive_data.contents[i].id);
+                            file_in_drive.setAttribute("name", drive_data.contents[i].id);
+                            file_in_drive.setAttribute("type", "submit");
+                            
+                            document.getElementById("post_area").appendChild(file_in_drive);
+                        }
+                    
+                    var contributors = [];
+                    var contribution = [];
+                    
+                    for (var user in drive_data.contribution)
+                        {
+                            contributors.push(user);
+                            contribution.push(drive_data.contribution[user]);
+                        }
+                    
+                    create_pie_chart(drive_name, contributors, contribution);
+                    
+                    function createChart(data, file_name) 
+                        {
+                            var chart = new CanvasJS.Chart("user_contribution_pie_chart", 
+                                                            {
+                                                                theme: "theme3", //colour/text selection
+                                                                title:
+                                                                        {
+                                                                            text: "User Actions for " + file_name
+                                                                        }, //title with parameters		
+                                                                data: 
+                                                                        [{       
+                                                                            type: "pie", //type of graph
+                                                                            showInLegend: true, //legend or no legend
+                                                                            toolTipContent: "{y} - #percent %", //value and % when hover over segment
+                                                                            legendText: "{indexLabel}", //names of users
+                                                                            dataPoints: data //data in the form of contributions : user
+                                                                        }]
+                                                            });
+                            chart.render();
+                        }
+                    
+                    function create_pie_chart(file_name, users, contributions) 
+                        {
+                            var data = [];
+
+                            //filling the data array in the required format
+                            for (var i = 0; i < users.length; i++)
+                            {
+                              data.push({y: contributions[i], indexLabel: users[i]});
+                            }  
+                              createChart(data, file_name);    
+                        }
+                </script>
+            </main>
+        </div>
+    </body>
+</html>

@@ -55,11 +55,9 @@
             <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
             <main class="mdl-layout__content">
-                <table class="full-width mdl-data-table mdl-js-data-table mdl-data-table mdl-shadow--0dp" style="width:30%; postion: absolute"  border = "0">
-                    <tbody>
-                            <div id="user_contribution_pie_chart" style="height: 100%; width: 100%;"></div>
-                    </tbody>
-                </table>
+                <form ation="" method="post">
+                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" style="height:63px; width:117px;" name="Pie" type="submit">Pie Chart</button>
+                </form>
                 <canvas id="histogram" style="position: relative;"></canvas>
                 <script>
                     var drive_data = {{drive_data|tojson}};
@@ -100,41 +98,7 @@
                             contribution.push(drive_data.contribution[user]);
                         }
                     
-                    create_pie_chart(drive_name, contributors, contribution);
                     create_histogram(drive_histogram);
-                    
-                    function createChart(data, file_name) 
-                        {
-                            var chart = new CanvasJS.Chart("user_contribution_pie_chart", 
-                                                            {
-                                                                theme: "theme3", //colour/text selection
-                                                                title:
-                                                                        {
-                                                                            text: "User Actions for " + file_name
-                                                                        }, //title with parameters		
-                                                                data: 
-                                                                        [{       
-                                                                            type: "pie", //type of graph
-                                                                            showInLegend: true, //legend or no legend
-                                                                            toolTipContent: "{y} - #percent %", //value and % when hover over segment
-                                                                            legendText: "{indexLabel}", //names of users
-                                                                            dataPoints: data //data in the form of contributions : user
-                                                                        }]
-                                                            });
-                            chart.render();
-                        }
-                    
-                    function create_pie_chart(file_name, users, contributions) 
-                        {
-                            var data = [];
-
-                            //filling the data array in the required format
-                            for (var i = 0; i < users.length; i++)
-                            {
-                              data.push({y: contributions[i], indexLabel: users[i]});
-                            }  
-                              createChart(data, file_name);    
-                        }
                     
                     function create_histogram(drive_user_data)
                         {

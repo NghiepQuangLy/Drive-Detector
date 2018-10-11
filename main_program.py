@@ -47,13 +47,13 @@ def user_account():
     if request.method == "POST":
         global content_ids
         content_ids.append(list(request.form.keys())[0].strip())
-        return redirect(url_for('inside_drive'))
+        return redirect(url_for('inside_drive_pie'))
 
     return render_template("user_account.html", account_data=json_account)
 
 
-@app.route("/inside_drive/", methods=["GET", "POST"])
-def inside_drive():
+@app.route("/inside_drive_pie/", methods=["GET", "POST"])
+def inside_drive_pie():
 
     global account_contents
     global content_ids
@@ -65,6 +65,8 @@ def inside_drive():
         if list(request.form.keys())[0].strip() == "Back":
             content_ids.pop()
             return redirect(url_for('user_account'))
+        elif list(request.form.keys())[0].strip() == "Histogram":
+            return redirect(url_for("inside_drive_histogram"))
 
         content_ids.append(list(request.form.keys())[0].strip())
 
@@ -90,7 +92,49 @@ def inside_drive():
             json_drive = drive.to_json()
             break
 
-    return render_template("inside_drive.html", drive_data=json_drive)
+    return render_template("inside_drive_pie.html", drive_data=json_drive)
+
+@app.route("/inside_drive_histogram/", methods=["GET", "POST"])
+def inside_drive_histogram():
+
+    global account_contents
+    global content_ids
+
+    if request.method == "POST":
+
+        type = None
+
+        if list(request.form.keys())[0].strip() == "Back":
+            content_ids.pop()
+            return redirect(url_for('user_account'))
+        elif list(request.form.keys())[0].strip() == "Pie":
+            return redirect(url_for("inside_drive_pie"))
+
+        content_ids.append(list(request.form.keys())[0].strip())
+
+        # have to check whether a file or a folder inside the drive was clicked
+        for drive in account_contents:
+            for object_in_drive in drive.contents:
+                if object_in_drive.id == content_ids[len(content_ids) - 1]:
+                    type = object_in_drive.type
+                    break
+            if type is not None:
+                break
+
+        # if a file was clicked
+        if type == "file":
+            return redirect(url_for('inside_file'))
+        # if a folder was clicked
+        elif type == "folder":
+            return redirect(url_for('inside_folder'))
+
+    json_drive = None
+    for drive in account_contents:
+        if drive.id == content_ids[len(content_ids) - 1]:
+            json_drive = drive.to_json()
+            break
+
+    return render_template("inside_drive_histogram.html", drive_data=json_drive)
 
 @app.route("/inside_folder/", methods=["GET", "POST"])
 def inside_folder():
@@ -102,7 +146,7 @@ def inside_folder():
 
         if list(request.form.keys())[0].strip() == "Back":
             content_ids.pop()
-            return redirect(url_for('inside_drive'))
+            return redirect(url_for('inside_drive_pie'))
 
         content_ids.append(list(request.form.keys())[0].strip())
 
@@ -133,7 +177,7 @@ def inside_file():
 
             for drive in account_contents:
                 if drive.id == parent:
-                    return redirect(url_for('inside_drive'))
+                    return redirect(url_for('inside_drive_pie'))
                 else:
                     for object_in_drive in drive.contents:
                         if object_in_drive.id == parent:
