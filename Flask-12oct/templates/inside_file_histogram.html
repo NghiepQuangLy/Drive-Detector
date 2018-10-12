@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Drive Detector</title>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+        <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+        <style>
+            .mdl-layout__drawer button
+            {
+                text-align: left;
+            }
+            .mdl-layout__drawer span
+            {
+                text-align: left;
+                padding-left: 0px;
+            }
+            form
+            {
+                display: flex;
+                flex-direction: column;
+            }
+            .full-width
+            {
+                width: 100%;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- The drawer is always open in large screens. The header is always shown,
+        even in small screens. -->
+        <div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer
+        mdl-layout--fixed-header">
+            <header class="mdl-layout__header">
+                <div class="mdl-layout__header-row">
+                    <span class="mdl-layout-title">Contributions</span>
+                    <div class="mdl-layout-spacer"></div>
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right">
+                        <div class="mdl-textfield__expandable-holder">
+                            <input class="mdl-textfield__input" type="text" name="sample" id="fixed-header-drawer-exp">
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="mdl-layout__drawer" id="drive_drawer">
+                <form action="" method="post">
+                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" style="height:63px;" name="Back" type="submit">Back</button>
+                </form>
+                <span style="text-align: left;" class="mdl-layout-title" id="current_place"></span>
+                <form action="" method="post" id="post_area"></form>
+            </div>
+            <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+            <main class="mdl-layout__content">
+                <form ation="" method="post">
+                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" style="height:63px; width:117px;" name="Pie" type="submit">Pie Chart</button>
+                </form>
+                <canvas id="histogram" style="position: relative;"></canvas>
+                <script>
+                    var file_data = {{file_data|tojson}};
+                    var file_name = file_data.name;
+                    var file_histogram = file_data.histogram;
+                    
+                    var contributors = [];
+                    var contribution = [];
+                    
+                    for (var user in file_data.contribution)
+                        {
+                            contributors.push(user);
+                            contribution.push(file_data.contribution[user]);
+                        }
+                    
+                    create_histogram(file_histogram);
+                    
+                    function create_histogram(drive_user_data)
+                        {
+                            // Creating arrays to store the number of the actions performed by the user
+                            // for each type of action
+                            comment_count = [];
+                            create_count = [];
+                            edit_count = [];
+                            emptyTrash_count = [];
+                            move_count = [];
+                            permissionChange_count = [];
+                            rename_count = [];
+                            trash_count = [];
+                            unknown_count = [];
+                            untrash_count = [];
+                            upload_count = [];
+
+                            user_names = [];
+
+
+                            // Looping through the outer dictionary items in drive_user_data
+                            // With respect to the sample input data provided at the top of the file,
+                            // this loop would iterate through Jack, Tito, ...
+                            for(var key in drive_user_data) 
+                                {
+                                    // key would store the individual dictionary initializers inside drive_user_data
+                                    // for example, for the first iteration, key = "Jack"
+                                    // value variable below stores the dictionary objects present inside drive_user_data
+                                    var value = drive_user_data[key];
+
+                                    // Storing the user names in an array
+                                    user_names.push(key)
+
+                                    for(var key2 in value)
+                                        {
+                                            var value2 = value[key2]
+
+                                            // If the key2 value is insert, the value corresponding to key2
+                                            // would be pushed into the inserts array
+                                            // (Similar for all the other actions)
+                                            if (key2 == "comment")
+                                                {
+                                                    comment_count.push(value2)
+                                                }
+                                            else if (key2 == "create")
+                                                {
+                                                    create_count.push(value2)
+                                                }
+                                            else if (key2 == "edit")
+                                                {
+                                                    edit_count.push(value2)
+                                                }
+                                            else if (key2 == "emptyTrash")
+                                                {
+                                                    emptyTrash_count.push(value2)
+                                                }
+                                            else if (key2 == "move")
+                                                {
+                                                    move_count.push(value2)
+                                                }
+                                            else if (key2 == "permissionChange")
+                                                {
+                                                    permissionChange_count.push(value2)
+                                                }
+                                            else if (key2 == "rename")
+                                                {
+                                                    rename_count.push(value2)
+                                                }
+                                            else if (key2 == "trash") 
+                                                {
+                                                    trash_count.push(value2)
+                                                }
+                                            else if (key2 == "unknown")
+                                                {
+                                                    unknown_count.push(value2)
+                                                }
+                                            else if (key2 == "untrash")
+                                                {
+                                                    untrash_count.push(value2)
+                                                }
+                                            else if (key2 == "upload")
+                                                {
+                                                    upload_count.push(value2)
+                                                }
+                                        }
+                                  }
+
+                            var data = {
+                                labels : user_names,
+                                datasets : [
+                                            {
+                                                label : "Comments",
+                                                data: comment_count,
+                                                backgroundColor : "lime",
+                                                borderWidth : 1
+                                            },
+                                            {
+                                                label : "Create",
+                                                data: create_count,
+                                                backgroundColor : "aqua",
+                                                borderWidth : 1
+                                            },
+                                            {
+                                                label : "Edit",
+                                                data: edit_count,
+                                                backgroundColor : "skyblue",
+                                                borderWidth : 1
+                                            },
+                                            {
+                                                label : "Empty Trash",
+                                                data: emptyTrash_count,
+                                                backgroundColor : "springgreen",
+                                                borderWidth : 1
+                                            },
+                                            {
+                                                label : "Move",
+                                                data: move_count,
+                                                backgroundColor : "pink",
+                                                borderWidth : 1
+                                            },
+                                            {
+                                                label : "Permission Change",
+                                                data: permissionChange_count,
+                                                backgroundColor : "silver",
+                                                borderWidth : 1
+                                            },
+                                            {
+                                                label : "Rename",
+                                                data: rename_count,
+                                                backgroundColor : "salmon",
+                                                borderWidth : 1
+                                            },
+                                            {
+                                                label : "Trash",
+                                                data: trash_count,
+                                                backgroundColor : "brown",
+                                                borderWidth : 1
+                                            },
+                                            {
+                                                label : "Unknown",
+                                                data: unknown_count,
+                                                backgroundColor : "gray",
+                                                borderWidth : 1
+                                            },
+                                            {
+                                                label : "Untrash",
+                                                data: untrash_count,
+                                                backgroundColor : "crimson",
+                                                borderWidth : 1
+                                            },
+                                            {
+                                                label : "Upload",
+                                                data: upload_count,
+                                                backgroundColor : "skyblue",
+                                                borderWidth : 1
+                                            }
+                                        ]
+                                    };
+
+                            var options = {
+                                            title : 
+                                                    {
+                                                        display : true,
+                                                        position : "top",
+                                                        text : "User Contributions",
+                                                        fontSize : 18,
+                                                        fontColor : "#111"
+                                                    },
+                                            legend : 
+                                                    {
+                                                        display : true
+                                                    },
+                                            scales : 
+                                                    {
+                                                        xAxes: [
+                                                                    {
+                                                                        stacked: true
+                                                                    }
+                                                               ],
+                                                        yAxes: [
+                                                                    {
+                                                                        stacked: true
+                                                                    }
+                                                               ]
+                                                    }
+                                        };
+
+                            var chart = new Chart("histogram", {
+                                                            type : "horizontalBar",
+                                                            data : data,
+                                                            options : options
+                                                        });
+                        }
+                </script>
+            </main>
+        </div>
+    </body>
+</html>
